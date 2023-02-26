@@ -18,7 +18,9 @@ Most cosmos chains are mainly the same under the hood.  Nursery aims to standard
   * ibc-go
   * async-icq
   * cosmwasm
+    * canonicalized here: https://github.com/confio/cosmwasm
   * wasmd
+    * canonicalized here: https://github.com/notional-labs/wasmd
   * packet-forward-middleware
   * token factory
   * comet-bft
