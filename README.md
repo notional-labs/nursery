@@ -19,6 +19,7 @@ Most cosmos chains are mainly the same under the hood.  Nursery aims to standard
   * async-icq
   * cosmwasm
   * wasmd
+  * token factory
   * comet-bft
   * iavl
   * cosmos-db
