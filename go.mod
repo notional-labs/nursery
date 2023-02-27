@@ -177,7 +177,9 @@ replace (
 	github.com/CosmWasm/wasmd => github.com/notional-labs/wasmd v0.30.1-0.20230225082434-1bab40b3f1f7
 	// use cometbft enabled wasmvm
 	github.com/CosmWasm/wasmvm => github.com/notional-labs/wasmvm v1.0.0-soon2.0.20230224221603-dbeeef0006f5
+	// use ibc-go with wasm client support and cometbft
 	github.com/cosmos/ibc-go/v7 => github.com/cosmos/ibc-go/v7 v7.0.0-20230224085028-0a79e38d9199
+	// use interchain-accounts-demo with cometbft support
 	github.com/cosmos/interchain-accounts => github.com/notional-labs/interchain-accounts v0.0.0-20230224232143-e9404a7e24d2
 	// dgrijalva/jwt-go is deprecated and doesn't receive security updates.
 	// TODO: remove it: https://github.com/cosmos/cosmos-sdk/issues/13134
