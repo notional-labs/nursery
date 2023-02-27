@@ -8,6 +8,7 @@ require (
 	cosmossdk.io/errors v1.0.0-beta.7
 	cosmossdk.io/math v1.0.0-beta.6.0.20230216172121-959ce49135e4
 	cosmossdk.io/tools/rosetta v0.2.1
+	github.com/CosmWasm/wasmd v0.31.0-rc0
 	github.com/CosmWasm/wasmvm v1.2.0
 	github.com/cometbft/cometbft v0.37.0-alpha.3
 	github.com/cometbft/cometbft-db v0.7.0
@@ -41,8 +42,6 @@ require (
 	google.golang.org/grpc v1.53.0
 	gopkg.in/yaml.v2 v2.4.0
 )
-
-require github.com/CosmWasm/wasmd v0.0.0-00010101000000-000000000000
 
 require (
 	cloud.google.com/go v0.110.0 // indirect
