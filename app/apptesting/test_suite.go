@@ -38,7 +38,7 @@ import (
 type KeeperTestHelper struct {
 	suite.Suite
 
-	App         *app.WasmApp
+	App         *app.NurseryApp
 	Ctx         sdk.Context
 	QueryHelper *baseapp.QueryServiceTestHelper
 	TestAccs    []sdk.AccAddress
@@ -62,7 +62,7 @@ func (s *KeeperTestHelper) Setup() {
 
 func (s *KeeperTestHelper) SetupTestForInitGenesis() {
 	db := dbm.NewMemDB()
-	s.App = app.NewWasmAppWithCustomOptions(s.T(), true, app.SetupOptions{
+	s.App = app.NewNurseryAppWithCustomOptions(s.T(), true, app.SetupOptions{
 		Logger:  log.NewTMLogger(log.NewSyncWriter(os.Stdout)),
 		DB:      db,
 		AppOpts: simtestutil.NewAppOptionsWithFlagHome(s.T().TempDir()),

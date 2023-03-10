@@ -18,7 +18,7 @@ var emptyWasmOpts []wasm.Option
 
 func TestWasmdExport(t *testing.T) {
 	db := dbm.NewMemDB()
-	gapp := NewWasmAppWithCustomOptions(t, false, SetupOptions{
+	gapp := NewNurseryAppWithCustomOptions(t, false, SetupOptions{
 		Logger:  log.NewTMLogger(log.NewSyncWriter(os.Stdout)),
 		DB:      db,
 		AppOpts: simtestutil.NewAppOptionsWithFlagHome(t.TempDir()),
@@ -26,7 +26,7 @@ func TestWasmdExport(t *testing.T) {
 	gapp.Commit()
 
 	// Making a new app object with the db, so that initchain hasn't been called
-	newGapp := NewWasmApp(log.NewTMLogger(log.NewSyncWriter(os.Stdout)), db, nil, true, wasm.EnableAllProposals, simtestutil.NewAppOptionsWithFlagHome(t.TempDir()), emptyWasmOpts)
+	newGapp := NewNurseryApp(log.NewTMLogger(log.NewSyncWriter(os.Stdout)), db, nil, true, wasm.EnableAllProposals, simtestutil.NewAppOptionsWithFlagHome(t.TempDir()), emptyWasmOpts)
 	_, err := newGapp.ExportAppStateAndValidators(false, []string{}, nil)
 	require.NoError(t, err, "ExportAppStateAndValidators should not have an error")
 }

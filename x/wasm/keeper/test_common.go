@@ -72,7 +72,7 @@ import (
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
 	"github.com/stretchr/testify/require"
 
-	wasmappparams "github.com/CosmWasm/wasmd/app/params"
+	NurseryAppparams "github.com/CosmWasm/wasmd/app/params"
 	"github.com/CosmWasm/wasmd/x/wasm/keeper/wasmtesting"
 	"github.com/CosmWasm/wasmd/x/wasm/types"
 )
@@ -103,8 +103,8 @@ func MakeTestCodec(t testing.TB) codec.Codec {
 	return MakeEncodingConfig(t).Marshaler
 }
 
-func MakeEncodingConfig(_ testing.TB) wasmappparams.EncodingConfig {
-	encodingConfig := wasmappparams.MakeEncodingConfig()
+func MakeEncodingConfig(_ testing.TB) NurseryAppparams.EncodingConfig {
+	encodingConfig := NurseryAppparams.MakeEncodingConfig()
 	amino := encodingConfig.Amino
 	interfaceRegistry := encodingConfig.InterfaceRegistry
 
@@ -185,7 +185,7 @@ type TestKeepers struct {
 	WasmKeeper       *Keeper
 	IBCKeeper        *ibckeeper.Keeper
 	Router           MessageRouter
-	EncodingConfig   wasmappparams.EncodingConfig
+	EncodingConfig   NurseryAppparams.EncodingConfig
 	Faucet           *TestFaucet
 	MultiStore       sdk.CommitMultiStore
 	ScopedWasmKeeper capabilitykeeper.ScopedKeeper

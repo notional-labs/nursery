@@ -246,7 +246,7 @@ type ReflectSubMsgs struct {
 	Msgs []wasmvmtypes.SubMsg `json:"msgs"`
 }
 
-func executeCustom(t *testing.T, ctx sdk.Context, osmosis *app.WasmApp, contract sdk.AccAddress, sender sdk.AccAddress, msg bindings.TokenMsg, funds sdk.Coin) error {
+func executeCustom(t *testing.T, ctx sdk.Context, osmosis *app.NurseryApp, contract sdk.AccAddress, sender sdk.AccAddress, msg bindings.TokenMsg, funds sdk.Coin) error {
 	wrapped := bindings.TokenFactoryMsg{
 		Token: &msg,
 	}

@@ -281,7 +281,7 @@ func newApp(
 		cast.ToUint32(appOpts.Get(server.FlagStateSyncSnapshotKeepRecent)),
 	)
 
-	return app.NewWasmApp(
+	return app.NewNurseryApp(
 		logger, db, traceStore, true,
 		app.GetEnabledProposals(),
 		appOpts,
@@ -312,7 +312,7 @@ func appExport(
 	appOpts servertypes.AppOptions,
 	modulesToExport []string,
 ) (servertypes.ExportedApp, error) {
-	var wasmApp *app.WasmApp
+	var NurseryApp *app.NurseryApp
 	homePath, ok := appOpts.Get(flags.FlagHome).(string)
 	if !ok || homePath == "" {
 		return servertypes.ExportedApp{}, errors.New("application home is not set")
@@ -328,7 +328,7 @@ func appExport(
 	appOpts = viperAppOpts
 
 	var emptyWasmOpts []wasm.Option
-	wasmApp = app.NewWasmApp(
+	NurseryApp = app.NewNurseryApp(
 		logger,
 		db,
 		traceStore,
@@ -339,10 +339,10 @@ func appExport(
 	)
 
 	if height != -1 {
-		if err := wasmApp.LoadHeight(height); err != nil {
+		if err := NurseryApp.LoadHeight(height); err != nil {
 			return servertypes.ExportedApp{}, err
 		}
 	}
 
-	return wasmApp.ExportAppStateAndValidators(forZeroHeight, jailAllowedAddrs, modulesToExport)
+	return NurseryApp.ExportAppStateAndValidators(forZeroHeight, jailAllowedAddrs, modulesToExport)
 }

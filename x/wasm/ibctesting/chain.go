@@ -56,7 +56,7 @@ type TestChain struct {
 	t *testing.T
 
 	Coordinator   *Coordinator
-	App           *app.WasmApp
+	App           *app.NurseryApp
 	ChainID       string
 	LastHeader    *ibctm.Header  // header for last block height committed
 	CurrentHeader tmproto.Header // header for current block height
@@ -157,7 +157,7 @@ func NewTestChainWithValSet(t *testing.T, coord *Coordinator, chainID string, va
 		senderAccs = append(senderAccs, senderAcc)
 	}
 
-	wasmApp := app.SetupWithGenesisValSet(t, valSet, genAccs, chainID, opts, genBals...)
+	NurseryApp := app.SetupWithGenesisValSet(t, valSet, genAccs, chainID, opts, genBals...)
 
 	// create current header and call begin block
 	header := tmproto.Header{
@@ -166,18 +166,18 @@ func NewTestChainWithValSet(t *testing.T, coord *Coordinator, chainID string, va
 		Time:    coord.CurrentTime.UTC(),
 	}
 
-	txConfig := wasmApp.TxConfig()
+	txConfig := NurseryApp.TxConfig()
 
 	// create an account to send transactions from
 	chain := &TestChain{
 		t:              t,
 		Coordinator:    coord,
 		ChainID:        chainID,
-		App:            wasmApp,
+		App:            NurseryApp,
 		CurrentHeader:  header,
-		QueryServer:    wasmApp.IBCKeeper,
+		QueryServer:    NurseryApp.IBCKeeper,
 		TxConfig:       txConfig,
-		Codec:          wasmApp.AppCodec(),
+		Codec:          NurseryApp.AppCodec(),
 		Vals:           valSet,
 		NextVals:       valSet,
 		Signers:        signers,

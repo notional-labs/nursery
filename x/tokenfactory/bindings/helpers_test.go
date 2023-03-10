@@ -19,7 +19,7 @@ import (
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 )
 
-func CreateTestInput() (*app.WasmApp, sdk.Context) {
+func CreateTestInput() (*app.NurseryApp, sdk.Context) {
 	var emptyWasmOpts []wasm.Option
 
 	osmosis := app.Setup(&testing.T{}, emptyWasmOpts...)
@@ -27,7 +27,7 @@ func CreateTestInput() (*app.WasmApp, sdk.Context) {
 	return osmosis, ctx
 }
 
-func FundAccount(t *testing.T, ctx sdk.Context, osmosis *app.WasmApp, acct sdk.AccAddress) {
+func FundAccount(t *testing.T, ctx sdk.Context, osmosis *app.NurseryApp, acct sdk.AccAddress) {
 	// TODO:
 	// err := simapp.FundAccount(osmosis.BankKeeper, ctx, acct, sdk.NewCoins(
 	// 	sdk.NewCoin("uosmo", sdk.NewInt(10000000000)),
@@ -52,7 +52,7 @@ func RandomBech32AccountAddress() string {
 	return RandomAccountAddress().String()
 }
 
-func storeReflectCode(t *testing.T, ctx sdk.Context, tokenz *app.WasmApp, addr sdk.AccAddress) uint64 {
+func storeReflectCode(t *testing.T, ctx sdk.Context, tokenz *app.NurseryApp, addr sdk.AccAddress) uint64 {
 	wasmCode, err := os.ReadFile("./testdata/token_reflect.wasm")
 	require.NoError(t, err)
 
@@ -63,7 +63,7 @@ func storeReflectCode(t *testing.T, ctx sdk.Context, tokenz *app.WasmApp, addr s
 	return codeID
 }
 
-func instantiateReflectContract(t *testing.T, ctx sdk.Context, tokenz *app.WasmApp, funder sdk.AccAddress) sdk.AccAddress {
+func instantiateReflectContract(t *testing.T, ctx sdk.Context, tokenz *app.NurseryApp, funder sdk.AccAddress) sdk.AccAddress {
 	initMsgBz := []byte("{}")
 	contractKeeper := keeper.NewDefaultPermissionKeeper(tokenz.WasmKeeper)
 	codeID := uint64(1)
@@ -73,7 +73,7 @@ func instantiateReflectContract(t *testing.T, ctx sdk.Context, tokenz *app.WasmA
 	return addr
 }
 
-func fundAccount(t *testing.T, ctx sdk.Context, tokenz *app.WasmApp, addr sdk.AccAddress, coins sdk.Coins) {
+func fundAccount(t *testing.T, ctx sdk.Context, tokenz *app.NurseryApp, addr sdk.AccAddress, coins sdk.Coins) {
 	// TODO:
 	// err := simapp.FundAccount(
 	// 	tokenz.BankKeeper,
@@ -89,7 +89,7 @@ func fundAccount(t *testing.T, ctx sdk.Context, tokenz *app.WasmApp, addr sdk.Ac
 	require.NoError(t, err)
 }
 
-func SetupCustomApp(t *testing.T, addr sdk.AccAddress) (*app.WasmApp, sdk.Context) {
+func SetupCustomApp(t *testing.T, addr sdk.AccAddress) (*app.NurseryApp, sdk.Context) {
 	tokenz, ctx := CreateTestInput()
 	wasmKeeper := tokenz.WasmKeeper
 

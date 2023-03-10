@@ -46,7 +46,7 @@ import (
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
 )
 
-// SetupOptions defines arguments that are passed into `WasmApp` constructor.
+// SetupOptions defines arguments that are passed into `NurseryApp` constructor.
 type SetupOptions struct {
 	Logger   log.Logger
 	DB       *dbm.MemDB
@@ -54,7 +54,7 @@ type SetupOptions struct {
 	WasmOpts []wasm.Option
 }
 
-func setup(t testing.TB, withGenesis bool, invCheckPeriod uint, opts ...wasm.Option) (*WasmApp, GenesisState) {
+func setup(t testing.TB, withGenesis bool, invCheckPeriod uint, opts ...wasm.Option) (*NurseryApp, GenesisState) {
 	nodeHome := t.TempDir()
 	snapshotDir := filepath.Join(nodeHome, "data", "snapshots")
 
@@ -71,15 +71,15 @@ func setup(t testing.TB, withGenesis bool, invCheckPeriod uint, opts ...wasm.Opt
 	appOptions[flags.FlagHome] = nodeHome // ensure unique folder
 	appOptions[server.FlagInvCheckPeriod] = invCheckPeriod
 
-	app := NewWasmApp(log.NewNopLogger(), db, nil, true, wasmtypes.EnableAllProposals, appOptions, opts, baseAppOpts...)
+	app := NewNurseryApp(log.NewNopLogger(), db, nil, true, wasmtypes.EnableAllProposals, appOptions, opts, baseAppOpts...)
 	if withGenesis {
 		return app, NewDefaultGenesisState(app.AppCodec())
 	}
 	return app, GenesisState{}
 }
 
-// NewWasmAppWithCustomOptions initializes a new WasmApp with custom options.
-func NewWasmAppWithCustomOptions(t *testing.T, isCheckTx bool, options SetupOptions) *WasmApp {
+// NewNurseryAppWithCustomOptions initializes a new NurseryApp with custom options.
+func NewNurseryAppWithCustomOptions(t *testing.T, isCheckTx bool, options SetupOptions) *NurseryApp {
 	t.Helper()
 
 	privVal := mock.NewPV()
@@ -97,7 +97,7 @@ func NewWasmAppWithCustomOptions(t *testing.T, isCheckTx bool, options SetupOpti
 		Coins:   sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(100000000000000))),
 	}
 
-	app := NewWasmApp(options.Logger, options.DB, nil, true, wasmtypes.EnableAllProposals, options.AppOpts, options.WasmOpts)
+	app := NewNurseryApp(options.Logger, options.DB, nil, true, wasmtypes.EnableAllProposals, options.AppOpts, options.WasmOpts)
 	genesisState := NewDefaultGenesisState(app.appCodec)
 	genesisState, err = GenesisStateWithValSet(app.AppCodec(), genesisState, valSet, []authtypes.GenesisAccount{acc}, balance)
 	require.NoError(t, err)
@@ -120,8 +120,8 @@ func NewWasmAppWithCustomOptions(t *testing.T, isCheckTx bool, options SetupOpti
 	return app
 }
 
-// Setup initializes a new WasmApp. A Nop logger is set in WasmApp.
-func Setup(t *testing.T, opts ...wasm.Option) *WasmApp {
+// Setup initializes a new NurseryApp. A Nop logger is set in NurseryApp.
+func Setup(t *testing.T, opts ...wasm.Option) *NurseryApp {
 	t.Helper()
 
 	privVal := mock.NewPV()
@@ -145,11 +145,11 @@ func Setup(t *testing.T, opts ...wasm.Option) *WasmApp {
 	return app
 }
 
-// SetupWithGenesisValSet initializes a new WasmApp with a validator set and genesis accounts
+// SetupWithGenesisValSet initializes a new NurseryApp with a validator set and genesis accounts
 // that also act as delegators. For simplicity, each validator is bonded with a delegation
-// of one consensus engine unit in the default token of the WasmApp from first genesis
-// account. A Nop logger is set in WasmApp.
-func SetupWithGenesisValSet(t *testing.T, valSet *tmtypes.ValidatorSet, genAccs []authtypes.GenesisAccount, chainID string, opts []wasm.Option, balances ...banktypes.Balance) *WasmApp {
+// of one consensus engine unit in the default token of the NurseryApp from first genesis
+// account. A Nop logger is set in NurseryApp.
+func SetupWithGenesisValSet(t *testing.T, valSet *tmtypes.ValidatorSet, genAccs []authtypes.GenesisAccount, chainID string, opts []wasm.Option, balances ...banktypes.Balance) *NurseryApp {
 	t.Helper()
 
 	app, genesisState := setup(t, true, 5, opts...)
@@ -185,14 +185,14 @@ func SetupWithGenesisValSet(t *testing.T, valSet *tmtypes.ValidatorSet, genAccs 
 }
 
 // SetupWithEmptyStore set up a wasmd app instance with empty DB
-func SetupWithEmptyStore(t testing.TB) *WasmApp {
+func SetupWithEmptyStore(t testing.TB) *NurseryApp {
 	app, _ := setup(t, false, 0)
 	return app
 }
 
 // GenesisStateWithSingleValidator initializes GenesisState with a single validator and genesis accounts
 // that also act as delegators.
-func GenesisStateWithSingleValidator(t *testing.T, app *WasmApp) GenesisState {
+func GenesisStateWithSingleValidator(t *testing.T, app *NurseryApp) GenesisState {
 	t.Helper()
 
 	privVal := mock.NewPV()
@@ -222,11 +222,11 @@ func GenesisStateWithSingleValidator(t *testing.T, app *WasmApp) GenesisState {
 
 // AddTestAddrsIncremental constructs and returns accNum amount of accounts with an
 // initial balance of accAmt in random order
-func AddTestAddrsIncremental(app *WasmApp, ctx sdk.Context, accNum int, accAmt math.Int) []sdk.AccAddress {
+func AddTestAddrsIncremental(app *NurseryApp, ctx sdk.Context, accNum int, accAmt math.Int) []sdk.AccAddress {
 	return addTestAddrs(app, ctx, accNum, accAmt, simtestutil.CreateIncrementalAccounts)
 }
 
-func addTestAddrs(app *WasmApp, ctx sdk.Context, accNum int, accAmt math.Int, strategy simtestutil.GenerateAccountStrategy) []sdk.AccAddress {
+func addTestAddrs(app *NurseryApp, ctx sdk.Context, accNum int, accAmt math.Int, strategy simtestutil.GenerateAccountStrategy) []sdk.AccAddress {
 	testAddrs := strategy(accNum)
 
 	initCoins := sdk.NewCoins(sdk.NewCoin(app.StakingKeeper.BondDenom(ctx), accAmt))
@@ -238,7 +238,7 @@ func addTestAddrs(app *WasmApp, ctx sdk.Context, accNum int, accAmt math.Int, st
 	return testAddrs
 }
 
-func initAccountWithCoins(app *WasmApp, ctx sdk.Context, addr sdk.AccAddress, coins sdk.Coins) {
+func initAccountWithCoins(app *NurseryApp, ctx sdk.Context, addr sdk.AccAddress, coins sdk.Coins) {
 	err := app.BankKeeper.MintCoins(ctx, minttypes.ModuleName, coins)
 	if err != nil {
 		panic(err)
@@ -252,14 +252,14 @@ func initAccountWithCoins(app *WasmApp, ctx sdk.Context, addr sdk.AccAddress, co
 
 // ModuleAccountAddrs provides a list of blocked module accounts from configuration in AppConfig
 //
-// Ported from WasmApp
+// Ported from NurseryApp
 func ModuleAccountAddrs() map[string]bool {
 	return BlockedAddresses()
 }
 
 var emptyWasmOptions []wasm.Option
 
-// NewTestNetworkFixture returns a new WasmApp AppConstructor for network simulation tests
+// NewTestNetworkFixture returns a new NurseryApp AppConstructor for network simulation tests
 func NewTestNetworkFixture() network.TestFixture {
 	dir, err := os.MkdirTemp("", "simapp")
 	if err != nil {
@@ -267,9 +267,9 @@ func NewTestNetworkFixture() network.TestFixture {
 	}
 	defer os.RemoveAll(dir)
 
-	app := NewWasmApp(log.NewNopLogger(), dbm.NewMemDB(), nil, true, wasmtypes.EnableAllProposals, simtestutil.NewAppOptionsWithFlagHome(dir), emptyWasmOptions)
+	app := NewNurseryApp(log.NewNopLogger(), dbm.NewMemDB(), nil, true, wasmtypes.EnableAllProposals, simtestutil.NewAppOptionsWithFlagHome(dir), emptyWasmOptions)
 	appCtr := func(val network.ValidatorI) servertypes.Application {
-		return NewWasmApp(
+		return NewNurseryApp(
 			val.GetCtx().Logger, dbm.NewMemDB(), nil, true, wasmtypes.EnableAllProposals,
 			simtestutil.NewAppOptionsWithFlagHome(val.GetCtx().Config.RootDir),
 			emptyWasmOptions,
