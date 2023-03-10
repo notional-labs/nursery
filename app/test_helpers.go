@@ -296,7 +296,7 @@ func SignAndDeliverWithoutCommit(
 	chainID string, accNums, accSeqs []uint64, priv ...cryptotypes.PrivKey,
 ) (sdk.GasInfo, *sdk.Result, error) {
 	tx, err := simtestutil.GenSignedMockTx(
-		rand.New(rand.NewSource(time.Now().UnixNano())),
+		rand.New(rand.NewSource(time.Now().UnixNano())), //nolint:gosec
 		txCfg,
 		msgs,
 		sdk.Coins{sdk.NewInt64Coin(sdk.DefaultBondDenom, 0)},

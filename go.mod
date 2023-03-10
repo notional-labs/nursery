@@ -5,7 +5,7 @@ go 1.20
 require (
 	cosmossdk.io/api v0.3.1
 	cosmossdk.io/core v0.5.1 // indirect
-	cosmossdk.io/errors v1.0.0-beta.7 // indirect
+	cosmossdk.io/errors v1.0.0-beta.7
 	cosmossdk.io/math v1.0.0-beta.6.0.20230216172121-959ce49135e4
 	cosmossdk.io/tools/rosetta v0.2.1
 	github.com/CosmWasm/wasmd v0.31.0-rc0
