@@ -147,14 +147,14 @@ import (
 )
 
 const (
-	appName            = "NurseryApp"
+	appName            = "WasmApp"
 	MockFeePort string = ibcmock.ModuleName + ibcfeetypes.ModuleName
 )
 
 // We pull these out so we can set them with LDFLAGS in the Makefile
 var (
-	NodeDir      = ".nurseryd"
-	Bech32Prefix = "nursery"
+	NodeDir      = ".wasmd"
+	Bech32Prefix = "wasm"
 
 	// If EnabledSpecificProposals is "", and this is "true", then enable all x/wasm proposals.
 	// If EnabledSpecificProposals is "", and this is not "true", then disable all x/wasm proposals.
@@ -265,12 +265,12 @@ var (
 )
 
 var (
-	_ runtime.AppI            = (*NurseryApp)(nil)
-	_ servertypes.Application = (*NurseryApp)(nil)
+	_ runtime.AppI            = (*WasmApp)(nil)
+	_ servertypes.Application = (*WasmApp)(nil)
 )
 
-// NurseryApp extended ABCI application
-type NurseryApp struct {
+// WasmApp extended ABCI application
+type WasmApp struct {
 	*baseapp.BaseApp
 	legacyAmino       *codec.LegacyAmino
 	appCodec          codec.Codec
@@ -329,8 +329,8 @@ type NurseryApp struct {
 	configurator module.Configurator
 }
 
-// NewNurseryApp returns a reference to an initialized NurseryApp.
-func NewNurseryApp(
+// NewWasmApp returns a reference to an initialized WasmApp.
+func NewWasmApp(
 	logger log.Logger,
 	db dbm.DB,
 	traceStore io.Writer,
@@ -339,7 +339,7 @@ func NewNurseryApp(
 	appOpts servertypes.AppOptions,
 	wasmOpts []wasm.Option,
 	baseAppOptions ...func(*baseapp.BaseApp),
-) *NurseryApp {
+) *WasmApp {
 	encodingConfig := MakeEncodingConfig()
 
 	appCodec, legacyAmino := encodingConfig.Marshaler, encodingConfig.Amino
@@ -389,7 +389,7 @@ func NewNurseryApp(
 		os.Exit(1)
 	}
 
-	app := &NurseryApp{
+	app := &WasmApp{
 		BaseApp:           bApp,
 		legacyAmino:       legacyAmino,
 		appCodec:          appCodec,
@@ -810,25 +810,11 @@ func NewNurseryApp(
 	// NOTE: wasm module should be at the end as it can call other module functionality direct or via message dispatching during
 	// genesis phase. For example bank transfer, auth account check, staking, ...
 	genesisModuleOrder := []string{
-		capabilitytypes.ModuleName,
-		authtypes.ModuleName,
-		banktypes.ModuleName,
-		distrtypes.ModuleName,
-		stakingtypes.ModuleName,
-		slashingtypes.ModuleName,
-		govtypes.ModuleName,
-		minttypes.ModuleName,
-		crisistypes.ModuleName,
-		genutiltypes.ModuleName,
-		evidencetypes.ModuleName,
-		authz.ModuleName,
-		feegrant.ModuleName,
-		nft.ModuleName,
-		group.ModuleName,
-		paramstypes.ModuleName,
-		upgradetypes.ModuleName,
-		vestingtypes.ModuleName,
-		consensusparamtypes.ModuleName,
+		capabilitytypes.ModuleName, authtypes.ModuleName, banktypes.ModuleName,
+		distrtypes.ModuleName, stakingtypes.ModuleName, slashingtypes.ModuleName, govtypes.ModuleName,
+		minttypes.ModuleName, crisistypes.ModuleName, genutiltypes.ModuleName, evidencetypes.ModuleName, authz.ModuleName,
+		feegrant.ModuleName, nft.ModuleName, group.ModuleName, paramstypes.ModuleName, upgradetypes.ModuleName,
+		vestingtypes.ModuleName, consensusparamtypes.ModuleName,
 		// additional non simd modules
 		ibctransfertypes.ModuleName,
 		ibcexported.ModuleName,
@@ -936,7 +922,7 @@ func NewNurseryApp(
 	return app
 }
 
-func (app *NurseryApp) setAnteHandler(txConfig client.TxConfig, wasmConfig wasmTypes.WasmConfig, txCounterStoreKey storetypes.StoreKey) {
+func (app *WasmApp) setAnteHandler(txConfig client.TxConfig, wasmConfig wasmTypes.WasmConfig, txCounterStoreKey storetypes.StoreKey) {
 	anteHandler, err := NewAnteHandler(
 		HandlerOptions{
 			HandlerOptions: ante.HandlerOptions{
@@ -957,7 +943,7 @@ func (app *NurseryApp) setAnteHandler(txConfig client.TxConfig, wasmConfig wasmT
 	app.SetAnteHandler(anteHandler)
 }
 
-func (app *NurseryApp) setPostHandler() {
+func (app *WasmApp) setPostHandler() {
 	postHandler, err := posthandler.NewPostHandler(
 		posthandler.HandlerOptions{},
 	)
@@ -969,24 +955,24 @@ func (app *NurseryApp) setPostHandler() {
 }
 
 // Name returns the name of the App
-func (app *NurseryApp) Name() string { return app.BaseApp.Name() }
+func (app *WasmApp) Name() string { return app.BaseApp.Name() }
 
 // BeginBlocker application updates every begin block
-func (app *NurseryApp) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
+func (app *WasmApp) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
 	return app.ModuleManager.BeginBlock(ctx, req)
 }
 
 // EndBlocker application updates every end block
-func (app *NurseryApp) EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock {
+func (app *WasmApp) EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock {
 	return app.ModuleManager.EndBlock(ctx, req)
 }
 
-func (app *NurseryApp) Configurator() module.Configurator {
+func (app *WasmApp) Configurator() module.Configurator {
 	return app.configurator
 }
 
 // InitChainer application update at chain initialization
-func (app *NurseryApp) InitChainer(ctx sdk.Context, req abci.RequestInitChain) abci.ResponseInitChain {
+func (app *WasmApp) InitChainer(ctx sdk.Context, req abci.RequestInitChain) abci.ResponseInitChain {
 	var genesisState GenesisState
 	if err := json.Unmarshal(req.AppStateBytes, &genesisState); err != nil {
 		panic(err)
@@ -996,7 +982,7 @@ func (app *NurseryApp) InitChainer(ctx sdk.Context, req abci.RequestInitChain) a
 }
 
 // LoadHeight loads a particular height
-func (app *NurseryApp) LoadHeight(height int64) error {
+func (app *WasmApp) LoadHeight(height int64) error {
 	return app.LoadVersion(height)
 }
 
@@ -1004,7 +990,7 @@ func (app *NurseryApp) LoadHeight(height int64) error {
 //
 // NOTE: This is solely to be used for testing purposes as it may be desirable
 // for modules to register their own custom testing types.
-func (app *NurseryApp) LegacyAmino() *codec.LegacyAmino {
+func (app *WasmApp) LegacyAmino() *codec.LegacyAmino {
 	return app.legacyAmino
 }
 
@@ -1012,57 +998,57 @@ func (app *NurseryApp) LegacyAmino() *codec.LegacyAmino {
 //
 // NOTE: This is solely to be used for testing purposes as it may be desirable
 // for modules to register their own custom testing types.
-func (app *NurseryApp) AppCodec() codec.Codec {
+func (app *WasmApp) AppCodec() codec.Codec {
 	return app.appCodec
 }
 
-// InterfaceRegistry returns NurseryApp's InterfaceRegistry
-func (app *NurseryApp) InterfaceRegistry() types.InterfaceRegistry {
+// InterfaceRegistry returns WasmApp's InterfaceRegistry
+func (app *WasmApp) InterfaceRegistry() types.InterfaceRegistry {
 	return app.interfaceRegistry
 }
 
-// TxConfig returns NurseryApp's TxConfig
-func (app *NurseryApp) TxConfig() client.TxConfig {
+// TxConfig returns WasmApp's TxConfig
+func (app *WasmApp) TxConfig() client.TxConfig {
 	return app.txConfig
 }
 
 // GetKey returns the KVStoreKey for the provided store key.
 //
 // NOTE: This is solely to be used for testing purposes.
-func (app *NurseryApp) GetKey(storeKey string) *storetypes.KVStoreKey {
+func (app *WasmApp) GetKey(storeKey string) *storetypes.KVStoreKey {
 	return app.keys[storeKey]
 }
 
 // GetTKey returns the TransientStoreKey for the provided store key.
 //
 // NOTE: This is solely to be used for testing purposes.
-func (app *NurseryApp) GetTKey(storeKey string) *storetypes.TransientStoreKey {
+func (app *WasmApp) GetTKey(storeKey string) *storetypes.TransientStoreKey {
 	return app.tkeys[storeKey]
 }
 
 // GetMemKey returns the MemStoreKey for the provided mem key.
 //
 // NOTE: This is solely used for testing purposes.
-func (app *NurseryApp) GetMemKey(storeKey string) *storetypes.MemoryStoreKey {
+func (app *WasmApp) GetMemKey(storeKey string) *storetypes.MemoryStoreKey {
 	return app.memKeys[storeKey]
 }
 
 // GetSubspace returns a param subspace for a given module name.
 //
 // NOTE: This is solely to be used for testing purposes.
-func (app *NurseryApp) GetSubspace(moduleName string) paramstypes.Subspace {
+func (app *WasmApp) GetSubspace(moduleName string) paramstypes.Subspace {
 	subspace, _ := app.ParamsKeeper.GetSubspace(moduleName)
 	return subspace
 }
 
 // SimulationManager implements the SimulationApp interface
-func (app *NurseryApp) SimulationManager() *module.SimulationManager {
+func (app *WasmApp) SimulationManager() *module.SimulationManager {
 	return app.sm
 }
 
 // RegisterAPIRoutes registers all application module routes with the provided
 // API server.
-func (app *NurseryApp) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.APIConfig) {
+func (app *WasmApp) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.APIConfig) {
 	clientCtx := apiSvr.ClientCtx
 	// Register new tx routes from grpc-gateway.
 	authtx.RegisterGRPCGatewayRoutes(clientCtx, apiSvr.GRPCGatewayRouter)
@@ -1083,12 +1069,12 @@ func (app *NurseryApp) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.AP
 }
 
 // RegisterTxService implements the Application.RegisterTxService method.
-func (app *NurseryApp) RegisterTxService(clientCtx client.Context) {
+func (app *WasmApp) RegisterTxService(clientCtx client.Context) {
 	authtx.RegisterTxService(app.BaseApp.GRPCQueryRouter(), clientCtx, app.BaseApp.Simulate, app.interfaceRegistry)
 }
 
 // RegisterTendermintService implements the Application.RegisterTendermintService method.
-func (app *NurseryApp) RegisterTendermintService(clientCtx client.Context) {
+func (app *WasmApp) RegisterTendermintService(clientCtx client.Context) {
 	tmservice.RegisterTendermintService(
 		clientCtx,
 		app.BaseApp.GRPCQueryRouter(),
@@ -1097,7 +1083,7 @@ func (app *NurseryApp) RegisterTendermintService(clientCtx client.Context) {
 	)
 }
 
-func (app *NurseryApp) RegisterNodeService(clientCtx client.Context) {
+func (app *WasmApp) RegisterNodeService(clientCtx client.Context) {
 	nodeservice.RegisterNodeService(clientCtx, app.GRPCQueryRouter())
 }
 

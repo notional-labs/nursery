@@ -564,12 +564,12 @@ func TestQueryErrors(t *testing.T) {
 }
 
 func TestAcceptListStargateQuerier(t *testing.T) {
-	NurseryApp := app.SetupWithEmptyStore(t)
-	ctx := NurseryApp.NewUncachedContext(false, tmproto.Header{ChainID: "foo", Height: 1, Time: time.Now()})
-	err := NurseryApp.StakingKeeper.SetParams(ctx, stakingtypes.DefaultParams())
+	wasmApp := app.SetupWithEmptyStore(t)
+	ctx := wasmApp.NewUncachedContext(false, tmproto.Header{ChainID: "foo", Height: 1, Time: time.Now()})
+	err := wasmApp.StakingKeeper.SetParams(ctx, stakingtypes.DefaultParams())
 	require.NoError(t, err)
 
-	addrs := app.AddTestAddrsIncremental(NurseryApp, ctx, 2, sdk.NewInt(1_000_000))
+	addrs := app.AddTestAddrsIncremental(wasmApp, ctx, 2, sdk.NewInt(1_000_000))
 	accepted := keeper.AcceptedStargateQueries{
 		"/cosmos.auth.v1beta1.Query/Account": &authtypes.QueryAccountResponse{},
 		"/no/route/to/this":                  &authtypes.QueryAccountResponse{},
@@ -617,7 +617,7 @@ func TestAcceptListStargateQuerier(t *testing.T) {
 	}
 	for name, spec := range specs {
 		t.Run(name, func(t *testing.T) {
-			q := keeper.AcceptListStargateQuerier(accepted, NurseryApp.GRPCQueryRouter(), NurseryApp.AppCodec())
+			q := keeper.AcceptListStargateQuerier(accepted, wasmApp.GRPCQueryRouter(), wasmApp.AppCodec())
 			gotBz, gotErr := q(ctx, spec.req)
 			if spec.expErr {
 				require.Error(t, gotErr)

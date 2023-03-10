@@ -19,8 +19,8 @@ import (
 var wasmContract []byte
 
 func TestStoreCode(t *testing.T) {
-	NurseryApp := app.Setup(t)
-	ctx := NurseryApp.BaseApp.NewContext(false, tmproto.Header{})
+	wasmApp := app.Setup(t)
+	ctx := wasmApp.BaseApp.NewContext(false, tmproto.Header{})
 	_, _, sender := testdata.KeyTestPubAddr()
 	msg := types.MsgStoreCodeFixture(func(m *types.MsgStoreCode) {
 		m.WASMByteCode = wasmContract
@@ -28,17 +28,17 @@ func TestStoreCode(t *testing.T) {
 	})
 
 	// when
-	rsp, err := NurseryApp.MsgServiceRouter().Handler(msg)(ctx, msg)
+	rsp, err := wasmApp.MsgServiceRouter().Handler(msg)(ctx, msg)
 
 	// then
 	require.NoError(t, err)
 	var result types.MsgStoreCodeResponse
-	require.NoError(t, NurseryApp.AppCodec().Unmarshal(rsp.Data, &result))
+	require.NoError(t, wasmApp.AppCodec().Unmarshal(rsp.Data, &result))
 	assert.Equal(t, uint64(1), result.CodeID)
 	expHash := sha256.Sum256(wasmContract)
 	assert.Equal(t, expHash[:], result.Checksum)
 	// and
-	info := NurseryApp.WasmKeeper.GetCodeInfo(ctx, 1)
+	info := wasmApp.WasmKeeper.GetCodeInfo(ctx, 1)
 	assert.NotNil(t, info)
 	assert.Equal(t, expHash[:], info.CodeHash)
 	assert.Equal(t, sender.String(), info.Creator)

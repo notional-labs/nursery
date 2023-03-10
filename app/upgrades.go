@@ -17,7 +17,7 @@ import (
 // v0.46.x to v0.47.x.
 const UpgradeName = "v046-to-v047" // add your custom upgrade name
 
-func (app NurseryApp) RegisterUpgradeHandlers() {
+func (app WasmApp) RegisterUpgradeHandlers() {
 	baseAppLegacySS := app.ParamsKeeper.Subspace(baseapp.Paramspace).WithKeyTable(paramstypes.ConsensusParamsKeyTable())
 
 	app.UpgradeKeeper.SetUpgradeHandler(

@@ -15,16 +15,16 @@ import (
 )
 
 func TestModuleMigrations(t *testing.T) {
-	NurseryApp := app.Setup(t)
-	ctx := NurseryApp.BaseApp.NewContext(false, tmproto.Header{})
+	wasmApp := app.Setup(t)
+	ctx := wasmApp.BaseApp.NewContext(false, tmproto.Header{})
 	upgradeHandler := func(ctx sdk.Context, plan upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) { //nolint:unparam
-		return NurseryApp.ModuleManager.RunMigrations(ctx, NurseryApp.Configurator(), fromVM)
+		return wasmApp.ModuleManager.RunMigrations(ctx, wasmApp.Configurator(), fromVM)
 	}
-	fromVM := NurseryApp.UpgradeKeeper.GetModuleVersionMap(ctx)
+	fromVM := wasmApp.UpgradeKeeper.GetModuleVersionMap(ctx)
 	fromVM[wasm.ModuleName] = 1                                     // start with initial version
 	upgradeHandler(ctx, upgradetypes.Plan{Name: "testing"}, fromVM) //nolint:errcheck
 	// when
-	gotVM, err := NurseryApp.ModuleManager.RunMigrations(ctx, NurseryApp.Configurator(), fromVM)
+	gotVM, err := wasmApp.ModuleManager.RunMigrations(ctx, wasmApp.Configurator(), fromVM)
 	// then
 	require.NoError(t, err)
 	assert.Equal(t, uint64(2), gotVM[wasm.ModuleName])
