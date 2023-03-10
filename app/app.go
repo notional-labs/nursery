@@ -236,6 +236,7 @@ var (
 		vesting.AppModuleBasic{},
 		nftmodule.AppModuleBasic{},
 		consensus.AppModuleBasic{},
+
 		// non sdk modules
 		wasm.AppModuleBasic{},
 		ibc.AppModuleBasic{},
