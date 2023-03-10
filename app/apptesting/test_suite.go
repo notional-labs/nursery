@@ -30,9 +30,9 @@ import (
 
 	authzcodec "github.com/CosmWasm/wasmd/x/tokenfactory/types/authzcodec"
 
-	"github.com/CosmWasm/wasmd/app"
 	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
+	"github.com/notional-labs/nursery/app"
 )
 
 type KeeperTestHelper struct {

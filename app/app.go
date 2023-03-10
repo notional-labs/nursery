@@ -147,14 +147,14 @@ import (
 )
 
 const (
-	appName            = "WasmApp"
+	appName            = "NurseryApp"
 	MockFeePort string = ibcmock.ModuleName + ibcfeetypes.ModuleName
 )
 
 // We pull these out so we can set them with LDFLAGS in the Makefile
 var (
-	NodeDir      = ".wasmd"
-	Bech32Prefix = "wasm"
+	NodeDir      = ".nurseryd"
+	Bech32Prefix = "nursery"
 
 	// If EnabledSpecificProposals is "", and this is "true", then enable all x/wasm proposals.
 	// If EnabledSpecificProposals is "", and this is not "true", then disable all x/wasm proposals.

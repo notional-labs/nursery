@@ -3,7 +3,7 @@ package app
 import (
 	"github.com/cosmos/cosmos-sdk/std"
 
-	"github.com/CosmWasm/wasmd/app/params"
+	"github.com/notional-labs/nursery/app/params"
 )
 
 // MakeEncodingConfig creates a new EncodingConfig with all modules registered
