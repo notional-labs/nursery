@@ -19,7 +19,7 @@ require (
 	github.com/cosmos/iavl v0.20.0-alpha4 // indirect
 	github.com/cosmos/ibc-go/v7 v7.0.0-rc1
 	github.com/cosmos/ics23/go v0.9.1-0.20221207100636-b1abd8678aab // indirect
-	github.com/cosmos/interchain-accounts v0.4.1-0.20230129194959-49ab09ed3227
+	github.com/cosmos/interchain-accounts v0.5.0
 	github.com/docker/distribution v2.8.1+incompatible // indirect
 	github.com/dvsekhvalnov/jose2go v1.5.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
@@ -174,8 +174,6 @@ replace (
 	github.com/99designs/keyring => github.com/cosmos/keyring v1.2.0
 	// use notional fork of wasmd (should be from branch: 47-with-token-factory)
 	github.com/CosmWasm/wasmd => github.com/notional-labs/wasmd v0.30.1-0.20230310210910-fe6ac0bc53cc
-	// use interchain-accounts-demo with cometbft support
-	github.com/cosmos/interchain-accounts => github.com/notional-labs/interchain-accounts v0.0.0-20230224232143-e9404a7e24d2
 	// dgrijalva/jwt-go is deprecated and doesn't receive security updates.
 	// TODO: remove it: https://github.com/cosmos/cosmos-sdk/issues/13134
 	github.com/dgrijalva/jwt-go => github.com/golang-jwt/jwt/v4 v4.4.2
