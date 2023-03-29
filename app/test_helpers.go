@@ -54,18 +54,19 @@ type SetupOptions struct {
 	WasmOpts []wasm.Option
 }
 
-func setup(t testing.TB, withGenesis bool, invCheckPeriod uint, opts ...wasm.Option) (*WasmApp, GenesisState) {
-	nodeHome := t.TempDir()
+func setup(tb testing.TB, withGenesis bool, invCheckPeriod uint, opts ...wasm.Option) (*WasmApp, GenesisState) {
+	tb.Helper()
+	nodeHome := tb.TempDir()
 	snapshotDir := filepath.Join(nodeHome, "data", "snapshots")
 
 	snapshotDB, err := dbm.NewDB("metadata", dbm.GoLevelDBBackend, snapshotDir)
-	require.NoError(t, err)
-	t.Cleanup(func() { snapshotDB.Close() })
+	require.NoError(tb, err)
+	tb.Cleanup(func() { snapshotDB.Close() })
 	snapshotStore, err := snapshots.NewStore(snapshotDB, snapshotDir)
-	require.NoError(t, err)
+	require.NoError(tb, err)
 	baseAppOpts := []func(*bam.BaseApp){bam.SetSnapshot(snapshotStore, snapshottypes.SnapshotOptions{KeepRecent: 2})}
 	db := dbm.NewMemDB()
-	t.Cleanup(func() { db.Close() })
+	tb.Cleanup(func() { db.Close() })
 
 	appOptions := make(simtestutil.AppOptionsMap, 0)
 	appOptions[flags.FlagHome] = nodeHome // ensure unique folder
@@ -185,8 +186,9 @@ func SetupWithGenesisValSet(t *testing.T, valSet *tmtypes.ValidatorSet, genAccs 
 }
 
 // SetupWithEmptyStore set up a wasmd app instance with empty DB
-func SetupWithEmptyStore(t testing.TB) *WasmApp {
-	app, _ := setup(t, false, 0)
+func SetupWithEmptyStore(tb testing.TB) *WasmApp {
+	tb.Helper()
+	app, _ := setup(tb, false, 0)
 	return app
 }
 
@@ -295,6 +297,7 @@ func SignAndDeliverWithoutCommit(
 	t *testing.T, txCfg client.TxConfig, app *bam.BaseApp, _ tmproto.Header, msgs []sdk.Msg,
 	chainID string, accNums, accSeqs []uint64, priv ...cryptotypes.PrivKey,
 ) (sdk.GasInfo, *sdk.Result, error) {
+	t.Helper()
 	tx, err := simtestutil.GenSignedMockTx(
 		rand.New(rand.NewSource(time.Now().UnixNano())), //nolint:gosec
 		txCfg,
