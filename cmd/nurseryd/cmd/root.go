@@ -282,7 +282,7 @@ func newApp(
 		cast.ToUint32(appOpts.Get(server.FlagStateSyncSnapshotKeepRecent)),
 	)
 
-	return app.NewWasmApp(
+	return app.NewApp(
 		logger, db, traceStore, true,
 		app.GetEnabledProposals(),
 		appOpts,
@@ -313,7 +313,7 @@ func appExport(
 	appOpts servertypes.AppOptions,
 	modulesToExport []string,
 ) (servertypes.ExportedApp, error) {
-	var wasmApp *app.WasmApp
+	var wasmApp *app.App
 	homePath, ok := appOpts.Get(flags.FlagHome).(string)
 	if !ok || homePath == "" {
 		return servertypes.ExportedApp{}, errors.New("application home is not set")
@@ -329,7 +329,7 @@ func appExport(
 	appOpts = viperAppOpts
 
 	var emptyWasmOpts []wasm.Option
-	wasmApp = app.NewWasmApp(
+	wasmApp = app.NewApp(
 		logger,
 		db,
 		traceStore,
