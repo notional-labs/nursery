@@ -80,7 +80,7 @@ func setup(tb testing.TB, chainID string, withGenesis bool, invCheckPeriod uint,
 }
 
 // NewWasmAppWithCustomOptions initializes a new WasmApp with custom options.
-func NewWasmAppWithCustomOptions(t *testing.T, isCheckTx bool, options SetupOptions) *App {
+func NewAppWithCustomOptions(t *testing.T, isCheckTx bool, options SetupOptions) *App {
 	t.Helper()
 
 	privVal := mock.NewPV()
