@@ -18,7 +18,7 @@ git clone https://github.com/notional-labs/nursery.git "$new_project_name"
 
 # Change every instance of the word "nursery" in the new repository into the name of the new project
 cd "$new_project_name" || exit
-find . -type f -name "*" -print0 | xargs -0 sed -i '' -e 's/nursery/'"$new_project_name"'/g'
+find . -type f -name "*" -exec sh -c 'sed -i "" "s/nursery/'"$new_project_name"'/g" "$0"' {} \;
 
 # Move cmd/nurseryd to cmd/$new_project_name
 mv cmd/nurseryd cmd/"$new_project_name"
