@@ -42,6 +42,8 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
 
+require github.com/strangelove-ventures/async-icq/v7 v7.0.0-20230317170414-3c3da64f93d4
+
 require (
 	cloud.google.com/go v0.110.0 // indirect
 	cloud.google.com/go/compute v1.18.0 // indirect
