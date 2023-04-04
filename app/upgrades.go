@@ -17,6 +17,7 @@ import (
 // v0.46.x to v0.47.x.
 const UpgradeName = "v046-to-v047" // add your custom upgrade name
 
+// RegisterUpgradeHandlers registers the upgrade handler for the sample App
 func (app App) RegisterUpgradeHandlers() {
 	baseAppLegacySS := app.ParamsKeeper.Subspace(baseapp.Paramspace).WithKeyTable(paramstypes.ConsensusParamsKeyTable())
 

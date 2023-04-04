@@ -389,7 +389,7 @@ func NewApp(
 		os.Exit(1)
 	}
 
-	app := &WasmApp{
+	app := &App{
 		BaseApp:           bApp,
 		legacyAmino:       legacyAmino,
 		appCodec:          appCodec,
@@ -962,11 +962,12 @@ func (app *App) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.R
 	return app.ModuleManager.BeginBlock(ctx, req)
 }
 
-// EndBlocker application updates every end block
+// EndBlocker application updates every end block.
 func (app *App) EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock {
 	return app.ModuleManager.EndBlock(ctx, req)
 }
 
+// Configurator returns the configurator for the application.
 func (app *App) Configurator() module.Configurator {
 	return app.configurator
 }
@@ -1083,6 +1084,7 @@ func (app *App) RegisterTendermintService(clientCtx client.Context) {
 	)
 }
 
+// RegisterNodeService implements the Application.RegisterNodeService method, which registers the node gRPC service.
 func (app *App) RegisterNodeService(clientCtx client.Context) {
 	nodeservice.RegisterNodeService(clientCtx, app.GRPCQueryRouter())
 }
