@@ -54,7 +54,7 @@ type SetupOptions struct {
 	WasmOpts []wasm.Option
 }
 
-func setup(tb testing.TB, withGenesis bool, invCheckPeriod uint, opts ...wasm.Option) (*App, GenesisState) {
+func setup(tb testing.TB, chainID string, withGenesis bool, invCheckPeriod uint, opts ...wasm.Option) (*App, GenesisState) {
 	tb.Helper()
 	nodeHome := tb.TempDir()
 	snapshotDir := filepath.Join(nodeHome, "data", "snapshots")
@@ -64,7 +64,7 @@ func setup(tb testing.TB, withGenesis bool, invCheckPeriod uint, opts ...wasm.Op
 	tb.Cleanup(func() { snapshotDB.Close() })
 	snapshotStore, err := snapshots.NewStore(snapshotDB, snapshotDir)
 	require.NoError(tb, err)
-	baseAppOpts := []func(*bam.BaseApp){bam.SetSnapshot(snapshotStore, snapshottypes.SnapshotOptions{KeepRecent: 2})}
+	baseAppOpts := []func(*bam.BaseApp){bam.SetSnapshot(snapshotStore, snapshottypes.SnapshotOptions{KeepRecent: 2}), bam.SetChainID(chainID)}
 	db := dbm.NewMemDB()
 	tb.Cleanup(func() { db.Close() })
 
@@ -153,7 +153,7 @@ func Setup(t *testing.T, opts ...wasm.Option) *App {
 func SetupWithGenesisValSet(t *testing.T, valSet *tmtypes.ValidatorSet, genAccs []authtypes.GenesisAccount, chainID string, opts []wasm.Option, balances ...banktypes.Balance) *App {
 	t.Helper()
 
-	app, genesisState := setup(t, true, 5, opts...)
+	app, genesisState := setup(t, chainID, true, 5, opts...)
 	genesisState, err := GenesisStateWithValSet(app.AppCodec(), genesisState, valSet, genAccs, balances...)
 	require.NoError(t, err)
 
@@ -188,7 +188,7 @@ func SetupWithGenesisValSet(t *testing.T, valSet *tmtypes.ValidatorSet, genAccs 
 // SetupWithEmptyStore set up a wasmd app instance with empty DB
 func SetupWithEmptyStore(tb testing.TB) *App {
 	tb.Helper()
-	app, _ := setup(tb, false, 0)
+	app, _ := setup(tb, "testing", false, 0)
 	return app
 }
 
