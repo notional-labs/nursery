@@ -540,18 +540,6 @@ func NewApp(
 	*/
 	app.GroupKeeper = groupkeeper.NewKeeper(keys[group.StoreKey], appCodec, app.MsgServiceRouter(), app.AccountKeeper, groupConfig)
 
-	// ICQ Keeper
-	app.ICQKeeper = icqkeeper.NewKeeper(
-		appCodec,
-		keys[icqtypes.StoreKey],
-		app.GetSubspace(icqtypes.ModuleName),
-		app.IBCKeeper.ChannelKeeper, // may be replaced with middleware
-		app.IBCKeeper.ChannelKeeper,
-		&app.IBCKeeper.PortKeeper,
-		scopedICQKeeper,
-		app.BaseApp, // may be replaced
-	)
-
 	// get skipUpgradeHeights from the app options
 	skipUpgradeHeights := map[int64]bool{}
 	for _, h := range cast.ToIntSlice(appOpts.Get(server.FlagUnsafeSkipUpgrades)) {
@@ -575,6 +563,18 @@ func NewApp(
 		app.StakingKeeper,
 		app.UpgradeKeeper,
 		scopedIBCKeeper,
+	)
+
+	// ICQ Keeper
+	app.ICQKeeper = icqkeeper.NewKeeper(
+		appCodec,
+		keys[icqtypes.StoreKey],
+		app.GetSubspace(icqtypes.ModuleName),
+		app.IBCKeeper.ChannelKeeper, // may be replaced with middleware
+		app.IBCKeeper.ChannelKeeper,
+		&app.IBCKeeper.PortKeeper,
+		scopedICQKeeper,
+		app.BaseApp, // may be replaced
 	)
 
 	// Register the proposal types
@@ -851,6 +851,7 @@ func NewApp(
 		ibcexported.ModuleName,
 		icatypes.ModuleName,
 		ibcfeetypes.ModuleName,
+		ibcmock.ModuleName,
 		tokenfactorytypes.ModuleName,
 		wasm.ModuleName,
 	)
@@ -868,6 +869,7 @@ func NewApp(
 		ibcexported.ModuleName,
 		icatypes.ModuleName,
 		ibcfeetypes.ModuleName,
+		ibcmock.ModuleName,
 		tokenfactorytypes.ModuleName,
 		wasm.ModuleName,
 	)
@@ -892,6 +894,7 @@ func NewApp(
 		ibcexported.ModuleName,
 		icatypes.ModuleName,
 		ibcfeetypes.ModuleName,
+		ibcmock.ModuleName,
 		// wasm after ibc transfer
 		tokenfactorytypes.ModuleName,
 		wasm.ModuleName,
