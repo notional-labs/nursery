@@ -545,7 +545,7 @@ func NewApp(
 		appCodec,
 		keys[icqtypes.StoreKey],
 		app.GetSubspace(icqtypes.ModuleName),
-		app.IBCKeeper.ChannelKeeper, // may be replaced with middleware
+		app.IBCFeeKeeper, // may be replaced with middleware
 		app.IBCKeeper.ChannelKeeper,
 		&app.IBCKeeper.PortKeeper,
 		scopedICQKeeper,
