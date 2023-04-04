@@ -1,4 +1,4 @@
-# nursery
+# Stellar Nursery
 
 ## Opinionated template for cosmos blockchains
 
@@ -9,6 +9,28 @@ Nursery is a cosmos blockchain template that stays up to date with the Cosmos ec
 Most cosmos chains are mainly the same under the hood.  Nursery aims to standardize that even further, so that developers can focus on adding new features, instead of rote maintenance.
 
 The first piece of this is just that every chain made with nursery is a fork of this repository so it is eaiser to merge in changes.  We plan to develop a new abstraction, that separates the chain template from your chain's unique features.  If you use only the template it is likely that nursery can even handle upgrades for you!
+
+
+## How?
+
+```bash
+curl https://github.com/notional-labs/nursery/raw/main/simple-nursery.bash | bash
+```
+
+if you don't enjoy that route, then you probably know other ways to use nursery :).
+
+Note that the simple-nursery.bash script assumes that you've got go 1.20+ and the github cli tool installed.  nursery.bash will install them for you, but is still in testing:
+
+
+```bash
+curl https://github.com/notional-labs/nursery/raw/main/nursery.bash | bash
+```
+
+
+
+
+
+
 
 ## Credits
 
