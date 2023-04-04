@@ -14,7 +14,7 @@ git clone https://github.com/notional-labs/nursery.git "$new_project_name"
 
 # Change every instance of the word "nursery" in the new repository into the name of the new project
 cd "$new_project_name" || exit
-find . -type f -name "*" -print0 | xargs -0 sed -i "" "s/nursery/$new_project_name/g"
+find . -type f -name "*" -print0 | xargs -0 sed -i "s/nursery/$new_project_name/g"
 
 # Move cmd/nurseryd to cmd/$new_project_name
 mv cmd/nurseryd cmd/"$new_project_name"
@@ -25,33 +25,39 @@ if ! command -v gh &> /dev/null; then
   read -p "Would you like to install them? (y/n) " install_gh
 
   if [ "$install_gh" == "y" ]; then
-    # Check if Homebrew is installed, and install it if it isn't
-    if ! command -v brew &> /dev/null; then
-      echo "Homebrew is not installed."
-      read -p "Would you like to install it? (y/n) " install_brew
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+      if ! command -v brew &> /dev/null; then
+        echo "Homebrew is not installed."
+        read -p "Would you like to install it? (y/n) " install_brew
 
-      if [ "$install_brew" == "y" ]; then
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-      else
-        echo "Error: Homebrew is required to install the GitHub command line tools."
-        exit 1
+        if [ "$install_brew" == "y" ]; then
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        else
+          echo "Error: Homebrew is required to install the GitHub command line tools."
+          exit 1
+        fi
       fi
+      brew install gh
+    else
+      sudo apt install -y gh
     fi
-
-    brew install gh
   else
     echo "Error: The GitHub command line tools are required to continue."
     exit 1
   fi
 fi
 
-# Check if Go 1.20 is installed, and install it using Homebrew if it isn't
+# Check if Go 1.20 is installed, and install it using Homebrew/apt if it isn't
 if ! command -v go &> /dev/null || ! go version | grep -q "go1.20"; then
   echo "Go 1.20 is not installed."
-  read -p "Would you like to install it using Homebrew? (y/n) " install_go
+  read -p "Would you like to install it using Homebrew/apt? (y/n) " install_go
 
   if [ "$install_go" == "y" ]; then
-    brew install go@1.20
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+      brew install go@1.20
+    else
+      sudo apt install -y golang-1.20
+    fi
   else
     echo "Error: Go 1.20 is required to continue."
     exit 1
