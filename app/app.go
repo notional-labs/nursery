@@ -142,9 +142,15 @@ import (
 	tokenfactorykeeper "github.com/CosmWasm/wasmd/x/tokenfactory/keeper"
 	tokenfactorytypes "github.com/CosmWasm/wasmd/x/tokenfactory/types"
 
+	// async-icq
 	icq "github.com/strangelove-ventures/async-icq/v7"
 	icqkeeper "github.com/strangelove-ventures/async-icq/v7/keeper"
 	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
+
+	// packet forward middleware
+	"github.com/strangelove-ventures/packet-forward-middleware/v7/router"
+	routerkeeper "github.com/strangelove-ventures/packet-forward-middleware/v7/router/keeper"
+	routertypes "github.com/strangelove-ventures/packet-forward-middleware/v7/router/types"
 
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
@@ -247,6 +253,7 @@ var (
 		icq.AppModuleBasic{},
 		ibctm.AppModuleBasic{},
 		transfer.AppModuleBasic{},
+		router.AppModuleBasic{},
 		ica.AppModuleBasic{},
 		intertx.AppModuleBasic{},
 		ibcfee.AppModuleBasic{},
@@ -313,6 +320,7 @@ type App struct {
 	IBCKeeper           *ibckeeper.Keeper // IBC Keeper must be a pointer in the app, so we can SetRouter on it correctly
 	ICQKeeper           icqkeeper.Keeper
 	IBCFeeKeeper        ibcfeekeeper.Keeper
+	RouterKeeper        routerkeeper.Keeper
 	ICAControllerKeeper icacontrollerkeeper.Keeper
 	TokenFactoryKeeper  tokenfactorykeeper.Keeper
 	ICAHostKeeper       icahostkeeper.Keeper
@@ -389,6 +397,7 @@ func NewApp(
 		icqtypes.StoreKey,
 		ibctransfertypes.StoreKey,
 		ibcfeetypes.StoreKey,
+		routertypes.StoreKey,
 		wasm.StoreKey,
 		icahosttypes.StoreKey,
 		icacontrollertypes.StoreKey,
@@ -622,6 +631,18 @@ func NewApp(
 	// If evidence needs to be handled for the app, set routes in router here and seal
 	app.EvidenceKeeper = *evidenceKeeper
 
+	// RouterKeeper must be created before TransferKeeper
+	app.RouterKeeper = *routerkeeper.NewKeeper(
+		appCodec,
+		app.keys[routertypes.StoreKey],
+		app.GetSubspace(routertypes.ModuleName),
+		app.TransferKeeper,
+		app.IBCKeeper.ChannelKeeper,
+		app.DistrKeeper,
+		app.BankKeeper,
+		app.IBCKeeper.ChannelKeeper,
+	)
+
 	// IBC Fee Module keeper
 	app.IBCFeeKeeper = ibcfeekeeper.NewKeeper(
 		appCodec, keys[ibcfeetypes.StoreKey],
@@ -806,10 +827,13 @@ func NewApp(
 		transfer.NewAppModule(app.TransferKeeper),
 		ibcfee.NewAppModule(app.IBCFeeKeeper),
 		ica.NewAppModule(&app.ICAControllerKeeper, &app.ICAHostKeeper),
-		crisis.NewAppModule(app.CrisisKeeper, skipGenesisInvariants, app.GetSubspace(crisistypes.ModuleName)), // always be last to make sure that it checks for all invariants and not only part of them
+		router.NewAppModule(&app.RouterKeeper),
+
 		// IBC modules
 		icq.NewAppModule(app.ICQKeeper),
 		mockModule,
+
+		crisis.NewAppModule(app.CrisisKeeper, skipGenesisInvariants, app.GetSubspace(crisistypes.ModuleName)), // always be last to make sure that it checks for all invariants and not only part of them
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
@@ -824,6 +848,7 @@ func NewApp(
 		authz.ModuleName, feegrant.ModuleName, nft.ModuleName, group.ModuleName,
 		paramstypes.ModuleName, vestingtypes.ModuleName, icqtypes.ModuleName, consensusparamtypes.ModuleName,
 		// additional non simd modules
+		routertypes.ModuleName,
 		ibctransfertypes.ModuleName,
 		ibcexported.ModuleName,
 		icatypes.ModuleName,
@@ -840,6 +865,7 @@ func NewApp(
 		feegrant.ModuleName, nft.ModuleName, group.ModuleName,
 		paramstypes.ModuleName, upgradetypes.ModuleName, vestingtypes.ModuleName, icqtypes.ModuleName, consensusparamtypes.ModuleName,
 		// additional non simd modules
+		routertypes.ModuleName,
 		ibctransfertypes.ModuleName,
 		ibcexported.ModuleName,
 		icatypes.ModuleName,
@@ -863,6 +889,7 @@ func NewApp(
 		feegrant.ModuleName, nft.ModuleName, group.ModuleName, paramstypes.ModuleName, upgradetypes.ModuleName,
 		vestingtypes.ModuleName, icqtypes.ModuleName, consensusparamtypes.ModuleName,
 		// additional non simd modules
+		routertypes.ModuleName,
 		ibctransfertypes.ModuleName,
 		ibcexported.ModuleName,
 		icatypes.ModuleName,
