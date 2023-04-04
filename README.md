@@ -72,7 +72,7 @@ Notional's current and former customers:
 
 * Osmosis
 * Juno
-* Cosmos Hub Community (pending passage of [prop 104](https://www.mintscan.io/cosmos/proposals/104))
+* Cosmos Hub Community (from [prop 104](https://www.mintscan.io/cosmos/proposals/104))
 * Stride
 * Evmos
 * Composable
