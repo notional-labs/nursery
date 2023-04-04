@@ -10,6 +10,8 @@ Most cosmos chains are mainly the same under the hood.  Nursery aims to standard
 
 The first piece of this is just that every chain made with nursery is a fork of this repository so it is eaiser to merge in changes.  We plan to develop a new abstraction, that separates the chain template from your chain's unique features.  If you use only the template it is likely that nursery can even handle upgrades for you!
 
+At Notional we watched chain teams stumble over fairly rote integration work again and again.  Nursery does that so that you don't need to.  
+
 
 ## How?
 
@@ -28,9 +30,25 @@ curl https://github.com/notional-labs/nursery/raw/main/nursery.bash | bash
 
 
 
+## What?
+
+So this ealy version has:
+
+* SDK v0.47.x
+* Cometbft v0.37.x
+* IBC-go v7.0.0
+* packet-forward-middleware v7.0.0
+* async-icq v7.0.0
+* CosmWasm 1.2
+* WASMD v0.40.0
 
 
-
+#### Planned Features
+* ICS Consumer Chains
+* ICS Producer Chains
+* Mesh producers and consumers
+* twasm
+* ibc-go v7.1.0 with the wasm client
 
 ## Credits
 
