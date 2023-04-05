@@ -14,10 +14,15 @@ git clone https://github.com/notional-labs/nursery.git "$new_project_name"
 
 # Change every instance of the word "nursery" in the new repository into the name of the new project
 cd "$new_project_name" || exit
-find . -type f -name "*" -print0 | xargs -0 sed -i "s/nursery/$new_project_name/g"
 
-# Move cmd/nurseryd to cmd/$new_project_name
-mv cmd/nurseryd cmd/"$new_project_name"
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  find . -type f -name "*" -print0 | xargs -0 sed -i "s/nursery/$new_project_name/g"
+else
+  find . -type f -name "*" -print0 | xargs -0 sed -i "" "s/nursery/$new_project_name/g"  
+fi
+
+# Move cmd/nurseryd to cmd/$new_project_named
+mv cmd/nurseryd cmd/"${new_project_name}d"
 
 # Check if the GitHub command line tools are installed, and install them if they aren't
 if ! command -v gh &> /dev/null; then
