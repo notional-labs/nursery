@@ -90,7 +90,7 @@ clone() {
             # Replace the search word with the replacement word using 'sed'
             if [[ "$package_manager" == "brew" ]]; then
                 # macOS sed
-                sed -i '' "s/nursery/$project_name/g" "$file"
+                LC_CTYPE=C && LANG=C && sed -i '' "s/nursery/$project_name/g" "$file"
             else
                 # GNU sed (Linux)
                 sed -i "s/nursery/$project_name/g" "$file"
