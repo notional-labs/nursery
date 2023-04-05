@@ -16,7 +16,7 @@ At Notional we watched chain teams stumble over fairly rote integration work aga
 ## How?
 
 ```bash
-curl https://github.com/notional-labs/nursery/raw/main/simple-nursery.bash | bash
+curl https://raw.githubusercontent.com/notional-labs/nursery/main/simple-nursery.bash | bash
 ```
 
 if you don't enjoy that route, then you probably know other ways to use nursery :).
@@ -25,7 +25,7 @@ Note that the simple-nursery.bash script assumes that you've got go 1.20+ and th
 
 
 ```bash
-curl https://github.com/notional-labs/nursery/raw/main/nursery.bash | bash
+curl https://raw.githubusercontent.com/notional-labs/nursery/main/nursery.bash | bash
 ```
 
 
@@ -72,7 +72,7 @@ Notional's current and former customers:
 
 * Osmosis
 * Juno
-* Cosmos Hub Community (pending passage of [prop 104](https://www.mintscan.io/cosmos/proposals/104))
+* Cosmos Hub Community (from [prop 104](https://www.mintscan.io/cosmos/proposals/104))
 * Stride
 * Evmos
 * Composable
