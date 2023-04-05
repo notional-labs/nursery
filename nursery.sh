@@ -89,8 +89,8 @@ clone() {
         if grep -q "nursery" "$file"; then
             # Replace the search word with the replacement word using 'sed'
             if [[ "$package_manager" == "brew" ]]; then
-                # macOS sed
-                LC_CTYPE=C && LANG=C && sed -i '' "s/nursery/$project_name/g" "$file"
+                # macOS sed / there will be error like 'sed: RE error: illegal byte sequence' when it try to touch .git
+                sed -i '' "s/nursery/$project_name/g" "$file"
             else
                 # GNU sed (Linux)
                 sed -i "s/nursery/$project_name/g" "$file"
