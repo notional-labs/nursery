@@ -76,11 +76,11 @@ prequisities() {
 
 clone() {
   project_name=$1
-  cd $project_name
 
   # Clone the nursery repository into a folder with the name of the new project
   git clone https://github.com/notional-labs/nursery.git $project_name
 
+  cd $project_name
   mv cmd/nurseryd cmd/${project_name}d
 
   find . -type f -print0 |
