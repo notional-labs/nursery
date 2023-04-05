@@ -75,7 +75,7 @@ prequisities() {
 }
 
 clone() {
-  project_name = $1
+  project_name=$1
   cd $project_name
 
   # Clone the nursery repository into a folder with the name of the new project
