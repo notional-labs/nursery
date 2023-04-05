@@ -79,7 +79,7 @@ clone() {
   cd $project_name
 
   # Clone the nursery repository into a folder with the name of the new project
-  git clone https://github.com/notional-labs/nursery.git .
+  git clone https://github.com/notional-labs/nursery.git $project_name
 
   mv cmd/nurseryd cmd/${project_name}d
 
