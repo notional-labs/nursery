@@ -111,7 +111,7 @@ if [[ ! "$new_project_name" =~ ^[a-z]+$ ]]; then
   exit 1
 fi
 
-clone $new_project_name
+clone "$new_project_name"
 
 # Check if Go 1.20 is installed, and install it using Homebrew/apt if it isn't
 if ! command -v go &> /dev/null || ! go version | grep -q "go1.20"; then
