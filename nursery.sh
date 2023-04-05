@@ -78,10 +78,10 @@ clone() {
   project_name=$1
 
   # Clone the nursery repository into a folder with the name of the new project
-  git clone https://github.com/notional-labs/nursery.git $project_name
+  git clone https://github.com/notional-labs/nursery.git "$project_name"
 
-  cd $project_name
-  mv cmd/nurseryd cmd/${project_name}d
+  cd "$project_name"
+  mv "cmd/nurseryd" "cmd/${project_name}d"
 
   find . -type f -print0 |
     while IFS= read -r -d $'\0' file; do
@@ -95,7 +95,7 @@ clone() {
                 # GNU sed (Linux)
                 sed -i "s/nursery/$project_name/g" "$file"
             fi
-            echo "Replaced '$search_word' with '$replacement_word' in: $file"
+            echo "Replaced nursery with '$project_name' in: $file"
         fi
     done
 }
@@ -103,7 +103,7 @@ clone() {
 prequisities
 
 # Accept the name of a new project from the user
-read -p "Enter the name of your new project (lowercase letters only): " new_project_name
+read -rp "Enter the name of your new project (lowercase letters only): " new_project_name
 
 # Validate that the new project name is only lowercase letters a-z
 if [[ ! "$new_project_name" =~ ^[a-z]+$ ]]; then
