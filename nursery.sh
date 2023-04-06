@@ -33,7 +33,7 @@ prequisities() {
           package_manager="brew"
       else
           echo "Homebrew is not installed on this macOS system"
-          read -p "Would you like to install it? (y/n) " install_brew
+          read -rp "Would you like to install it? (y/n) " install_brew
 
           if [ "$install_brew" == "y" ]; then
             /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -80,7 +80,7 @@ clone() {
   # Clone the nursery repository into a folder with the name of the new project
   git clone https://github.com/notional-labs/nursery.git "$project_name"
 
-  cd "$project_name"
+  cd "$project_name" || return 
   mv "cmd/nurseryd" "cmd/${project_name}d"
 
   find . -type f -print0 |
