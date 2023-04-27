@@ -12,7 +12,6 @@ The first piece of this is just that every chain made with nursery is a fork of 
 
 At Notional we watched chain teams stumble over fairly rote integration work again and again.  Nursery does that so that you don't need to.  
 
-
 ## How?
 
 ```bash
@@ -23,12 +22,9 @@ if you don't enjoy that route, then you probably know other ways to use nursery 
 
 Note that the simple-nursery.bash script assumes that you've got go 1.20+ and the github cli tool installed.  nursery.bash will install them for you, but is still in testing:
 
-
 ```bash
 curl https://raw.githubusercontent.com/notional-labs/nursery/main/nursery.bash | bash
 ```
-
-
 
 ## What?
 
@@ -42,8 +38,8 @@ So this ealy version has:
 * CosmWasm 1.2
 * WASMD v0.40.0
 
-
 #### Planned Features
+
 * ICS Consumer Chains
 * ICS Producer Chains
 * Mesh producers and consumers
@@ -54,6 +50,7 @@ So this ealy version has:
 
 * Every contributor to every cosmos ecosystem library that Nursery consumes, including, but not limited to:
   * cosmos-sdk
+  * osmosis
   * ibc-go
   * async-icq
   * cosmwasm
