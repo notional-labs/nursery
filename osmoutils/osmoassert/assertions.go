@@ -12,6 +12,7 @@ import (
 // panics. If expectPanic is false, asserts that sut does not panic.
 // returns true if sut panics and false it it does not
 func ConditionalPanic(t *testing.T, expectPanic bool, sut func()) {
+	t.Helper()
 	if expectPanic {
 		require.Panics(t, sut)
 		return
@@ -22,6 +23,7 @@ func ConditionalPanic(t *testing.T, expectPanic bool, sut func()) {
 // ConditionalError checks if expectError is true, asserts that err is an error
 // If expectError is false, asserts that err is nil
 func ConditionalError(t *testing.T, expectError bool, err error) {
+	t.Helper()
 	if expectError {
 		require.Error(t, err)
 		return
@@ -32,7 +34,8 @@ func ConditionalError(t *testing.T, expectError bool, err error) {
 // DecApproxEq is a helper function to compare two decimals.
 // It validates the two decimal are within a certain tolerance.
 // If not, it fails with a message.
-func DecApproxEq(t *testing.T, d1 sdk.Dec, d2 sdk.Dec, tol sdk.Dec, msgAndArgs ...interface{}) {
+func DecApproxEq(t *testing.T, d1, d2, tol sdk.Dec, msgAndArgs ...interface{}) {
+	t.Helper()
 	diff := d1.Sub(d2).Abs()
 	msg := messageFromMsgAndArgs(msgAndArgs...)
 	require.True(t, diff.LTE(tol), "expected |d1 - d2| <:\t%s\ngot |d1 - d2| = \t\t%s\nd1: %s, d2: %s\n%s", tol, diff, d1, d2, msg)

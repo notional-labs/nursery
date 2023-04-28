@@ -96,7 +96,8 @@ func TestAddFirst(t *testing.T) {
 	}
 	for _, tc := range tests {
 		dag := dag.NewDAG(tc.nodes)
-		dag.AddFirstElements(tc.first...)
+		err := dag.AddFirstElements(tc.first...)
+		require.NoError(t, err)
 		for _, edge := range tc.replaceEdges {
 			err := dag.ReplaceEdge(edge.start, edge.end)
 			require.NoError(t, err)

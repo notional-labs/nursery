@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"cosmossdk.io/math"
 	"github.com/cosmos/gogoproto/proto"
 
 	stypes "github.com/cosmos/cosmos-sdk/store/types"
@@ -15,7 +16,7 @@ import (
 
 type Child struct {
 	Index []byte
-	Acc   sdk.Int
+	Acc   math.Int
 }
 
 type Children []Child // branch nodes
@@ -34,7 +35,7 @@ func migrateBranchValue(oldValueBz []byte) *sumtree.Node {
 	return &sumtree.Node{Children: cs}
 }
 
-func migrateLeafValue(index []byte, oldValueBz []byte) *sumtree.Leaf {
+func migrateLeafValue(index, oldValueBz []byte) *sumtree.Leaf {
 	oldValue := sdk.ZeroInt()
 	err := json.Unmarshal(oldValueBz, &oldValue)
 	if err != nil {

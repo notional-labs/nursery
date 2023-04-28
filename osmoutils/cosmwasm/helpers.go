@@ -20,7 +20,7 @@ type ContractKeeper interface {
 
 	Sudo(ctx sdk.Context, contractAddress sdk.AccAddress, msg []byte) ([]byte, error)
 
-	Execute(ctx sdk.Context, contractAddress sdk.AccAddress, caller sdk.AccAddress, msg []byte, coins sdk.Coins) ([]byte, error)
+	Execute(ctx sdk.Context, contractAddress, caller sdk.AccAddress, msg []byte, coins sdk.Coins) ([]byte, error)
 }
 
 // WasmKeeper defines the interface needed to be fulfilled for
@@ -46,7 +46,7 @@ type WasmKeeper interface {
 // Returns:
 // - response: The response of type K from the smart contract.
 // - err: An error if the JSON marshaling, smart query, or JSON unmarshaling process fails; otherwise, nil.
-func Query[T any, K any](ctx sdk.Context, wasmKeeper WasmKeeper, contractAddress string, request T) (response K, err error) {
+func Query[T, K any](ctx sdk.Context, wasmKeeper WasmKeeper, contractAddress string, request T) (response K, err error) {
 	bz, err := json.Marshal(request)
 	if err != nil {
 		return response, err
@@ -81,7 +81,7 @@ func Query[T any, K any](ctx sdk.Context, wasmKeeper WasmKeeper, contractAddress
 //
 // Panics:
 // - If an error occurs during the JSON marshaling, smart query, or JSON unmarshaling process.
-func MustQuery[T any, K any](ctx sdk.Context, wasmKeeper WasmKeeper, contractAddress string, request T) (response K) {
+func MustQuery[T, K any](ctx sdk.Context, wasmKeeper WasmKeeper, contractAddress string, request T) (response K) {
 	response, err := Query[T, K](ctx, wasmKeeper, contractAddress, request)
 	if err != nil {
 		panic(err)
@@ -107,7 +107,7 @@ func MustQuery[T any, K any](ctx sdk.Context, wasmKeeper WasmKeeper, contractAdd
 // Returns:
 // - response: The response of type K from the smart contract.
 // - err: An error if the JSON marshaling, sudo call, or JSON unmarshaling process fails; otherwise, nil.
-func Sudo[T any, K any](ctx sdk.Context, contractKeeper ContractKeeper, contractAddress string, request T) (response K, err error) {
+func Sudo[T, K any](ctx sdk.Context, contractKeeper ContractKeeper, contractAddress string, request T) (response K, err error) {
 	bz, err := json.Marshal(request)
 	if err != nil {
 		return response, err
@@ -147,7 +147,7 @@ func Sudo[T any, K any](ctx sdk.Context, contractKeeper ContractKeeper, contract
 //
 // Panics:
 // - If an error occurs during the JSON marshaling, sudo call, or JSON unmarshaling process.
-func MustSudo[T any, K any](ctx sdk.Context, contractKeeper ContractKeeper, contractAddress string, request T) (response K) {
+func MustSudo[T, K any](ctx sdk.Context, contractKeeper ContractKeeper, contractAddress string, request T) (response K) {
 	response, err := Sudo[T, K](ctx, contractKeeper, contractAddress, request)
 	if err != nil {
 		panic(err)
@@ -174,7 +174,7 @@ func MustSudo[T any, K any](ctx sdk.Context, contractKeeper ContractKeeper, cont
 // Returns:
 // - response: The response data, can be of any data type (K). Returns the zero value of K in case of an error.
 // - err: An error object that indicates any error during the contract execution or data marshalling/unmarshalling process.
-func Execute[T any, K any](ctx sdk.Context, contractKeeper ContractKeeper, contractAddress string, caller sdk.AccAddress, coins sdk.Coins, request T) (response K, err error) {
+func Execute[T, K any](ctx sdk.Context, contractKeeper ContractKeeper, contractAddress string, caller sdk.AccAddress, coins sdk.Coins, request T) (response K, err error) {
 	bz, err := json.Marshal(request)
 	if err != nil {
 		return response, err
@@ -213,7 +213,7 @@ func Execute[T any, K any](ctx sdk.Context, contractKeeper ContractKeeper, contr
 //
 // Returns:
 // - response: The response data, can be of any data type (K).
-func MustExecute[T any, K any](ctx sdk.Context, contractKeeper ContractKeeper, contractAddress string, caller sdk.AccAddress, coins sdk.Coins, request T) (response K) {
+func MustExecute[T, K any](ctx sdk.Context, contractKeeper ContractKeeper, contractAddress string, caller sdk.AccAddress, coins sdk.Coins, request T) (response K) {
 	response, err := Execute[T, K](ctx, contractKeeper, contractAddress, caller, coins, request)
 	if err != nil {
 		panic(err)
