@@ -1230,7 +1230,7 @@ func (suite *AccumTestSuite) TestUpdatePosition() {
 			name:      testAddressOne,
 			numShares: sdk.ZeroDec(),
 
-			expectError: accumPackage.ZeroSharesError,
+			expectError: accumPackage.ZeroSharesErr,
 		},
 	}
 

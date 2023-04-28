@@ -282,7 +282,7 @@ func (accum AccumulatorObject) UpdatePosition(name string, numShares sdk.Dec) er
 // old accumulator value associated with the position.
 func (accum AccumulatorObject) UpdatePositionCustomAcc(name string, numShares sdk.Dec, customAccumulatorValue sdk.DecCoins) error {
 	if numShares.Equal(sdk.ZeroDec()) {
-		return ZeroSharesError
+		return ZeroSharesErr
 	}
 
 	if numShares.IsNegative() {

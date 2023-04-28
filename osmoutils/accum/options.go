@@ -1,11 +1,5 @@
 package accum
 
-import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
-)
-
-var one = sdk.OneDec()
-
 // validate returns nil if Options are valid.
 // Error otherwise. Note, that, currently,
 // options do not contain any fields. We

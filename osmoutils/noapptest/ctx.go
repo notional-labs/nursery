@@ -6,8 +6,8 @@ import (
 	"github.com/cometbft/cometbft/libs/log"
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	"github.com/cosmos/cosmos-sdk/store"
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	storetypes "github.com/cosmos/csomos-sdk/store/types"
 
 	dbm "github.com/cometbft/cometbft-db"
 )
@@ -15,7 +15,7 @@ import (
 func CtxWithStoreKeys(keys []storetypes.StoreKey, header tmproto.Header, isCheckTx bool) sdk.Context {
 	db := dbm.NewMemDB()
 	logger := log.NewNopLogger()
-	cms := store.NewCommitMultiStore(db, logger)
+	cms := store.NewCommitMultiStore(db)
 	for _, key := range keys {
 		cms.MountStoreWithDB(key, storetypes.StoreTypeIAVL, nil)
 	}
