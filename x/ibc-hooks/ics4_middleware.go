@@ -2,10 +2,13 @@ package ibc_hooks
 
 import (
 	// external libraries
+	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
 
 	// ibc-go
+	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 	porttypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
 	ibcexported "github.com/cosmos/ibc-go/v7/modules/core/exported"
 )
@@ -26,16 +29,24 @@ func NewICS4Middleware(channel porttypes.ICS4Wrapper, hooks Hooks) ICS4Middlewar
 	}
 }
 
-func (i ICS4Middleware) SendPacket(ctx sdk.Context, channelCap *capabilitytypes.Capability, packet ibcexported.PacketI) error {
+func (i ICS4Middleware) SendPacket(ctx sdk.Context, chanCap *capabilitytypes.Capability, sourcePort string, sourceChannel string, timeoutHeight clienttypes.Height, timeoutTimestamp uint64, data []byte) (sequence uint64, err error) {
 	if hook, ok := i.Hooks.(SendPacketOverrideHooks); ok {
-		return hook.SendPacketOverride(i, ctx, channelCap, packet)
+		return hook.SendPacketOverride(i, ctx sdk.Context, chanCap *capabilitytypes.Capability, sourcePort string, sourceChannel string, timeoutHeight clienttypes.Height, timeoutTimestamp uint64, data []byte)
 	}
 
 	if hook, ok := i.Hooks.(SendPacketBeforeHooks); ok {
 		hook.SendPacketBeforeHook(ctx, channelCap, packet)
 	}
 
-	_, err := i.channel.SendPacket(ctx, channelCap, packet.GetSourcePort(), packet.GetSourceChannel(), packet.GetDestPort(), packet.GetDestChannel(), packet.GetSequence(), packet.GetData(), packet.GetTimeoutHeight(), packet.GetTimeoutTimestamp(), packet.GetTimeoutHeight(), packet.GetTimeoutTimestamp()), packet.GetData())
+	tempHeight := packet.GetTimeoutHeight()
+
+	height, ok := tempHeight.(clienttypes.Height)
+	if !ok {
+		return fmt.Errorf("could not cast timeout height to clienttypes.Height")
+	}
+
+	// do the type assertion here
+	_, err := i.channel.SendPacket(ctx, channelCap, packet.GetSourcePort(), packet.GetSourceChannel(), height, packet.GetTimeoutTimestamp(), packet.GetData())
 
 	if hook, ok := i.Hooks.(SendPacketAfterHooks); ok {
 		hook.SendPacketAfterHook(ctx, channelCap, packet, err)

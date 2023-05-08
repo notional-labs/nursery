@@ -18,7 +18,7 @@ func CoinsDenoms(coins sdk.Coins) []string {
 // MinCoins returns the minimum of each denom between both coins.
 // For now it assumes they have the same denoms.
 // TODO: Replace with method in SDK once we update our version
-func MinCoins(coinsA sdk.Coins, coinsB sdk.Coins) sdk.Coins {
+func MinCoins(coinsA, coinsB sdk.Coins) sdk.Coins {
 	resCoins := sdk.Coins{}
 	for i, coin := range coinsA {
 		if coinsB[i].Amount.GT(coin.Amount) {
@@ -32,7 +32,7 @@ func MinCoins(coinsA sdk.Coins, coinsB sdk.Coins) sdk.Coins {
 
 // SubDecCoinArrays subtracts the contents of the second param from the first (decCoinsArrayA - decCoinsArrayB)
 // Note that this takes in two _arrays_ of DecCoins, meaning that each term itself is of type DecCoins (i.e. an array of DecCoin).
-func SubDecCoinArrays(decCoinsArrayA []sdk.DecCoins, decCoinsArrayB []sdk.DecCoins) ([]sdk.DecCoins, error) {
+func SubDecCoinArrays(decCoinsArrayA, decCoinsArrayB []sdk.DecCoins) ([]sdk.DecCoins, error) {
 	if len(decCoinsArrayA) != len(decCoinsArrayB) {
 		return []sdk.DecCoins{}, fmt.Errorf("DecCoin arrays must be of equal length to be subtracted")
 	}

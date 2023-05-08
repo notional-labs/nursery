@@ -15,6 +15,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	transfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
+	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 	channeltypes "github.com/cosmos/ibc-go/v7/modules/core/04-channel/types"
 	ibcexported "github.com/cosmos/ibc-go/v7/modules/core/exported"
 
@@ -226,24 +227,8 @@ func ValidateAndParseMemo(memo string, receiver string) (isWasmRouted bool, cont
 	return isWasmRouted, contractAddr, msgBytes, nil
 }
 
-func (h WasmHooks) SendPacketOverride(i ICS4Middleware, ctx sdk.Context, chanCap *capabilitytypes.Capability, packet ibcexported.PacketI) error {
-	concretePacket, ok := packet.(channeltypes.Packet)
-	if !ok {
-		_, err := i.channel.SendPacket(ctx, chanCap, packet)
-		return err // continue
-	}
-
-	isIcs20, data := isIcs20Packet(concretePacket)
-	if !isIcs20 {
-		_, err := i.channel.SendPacket(ctx, chanCap, packet)
-		return err // continue
-	}
-
-	isCallbackRouted, metadata := jsonStringHasKey(data.GetMemo(), types.IBCCallbackKey)
-	if !isCallbackRouted {
-		_, err := i.channel.SendPacket(ctx, chanCap, packet)
-		return err // continue
-	}
+func (h WasmHooks) SendPacketOverride(i ICS4Middleware, ctx sdk.Context, chanCap *capabilitytypes.Capability, sourcePort string, sourceChannel string, timeoutHeight clienttypes.Height, timeoutTimestamp uint64, data []byte) (sequence uint64, err error) {
+	_, err = i.channel.SendPacket(ctx, chanCap, sourcePort, sourceChannel, timeoutHeight, timeoutTimestamp, data)
 
 	// We remove the callback metadata from the memo as it has already been processed.
 

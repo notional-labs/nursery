@@ -33,7 +33,7 @@ func setupStore() sdk.KVStore {
 	return kvstore
 }
 
-func compareBranch(oldValueBz []byte, valueBz []byte) (err error) {
+func compareBranch(oldValueBz, valueBz []byte) (err error) {
 	oldValue := v101.Children{}
 	value := sumtree.Node{}
 	err = json.Unmarshal(oldValueBz, &oldValue)
@@ -55,7 +55,7 @@ func compareBranch(oldValueBz []byte, valueBz []byte) (err error) {
 	return
 }
 
-func compareLeaf(oldValueBz []byte, valueBz []byte) (err error) {
+func compareLeaf(oldValueBz, valueBz []byte) (err error) {
 	oldValue := sdk.ZeroInt()
 	value := sumtree.Leaf{}
 	err = json.Unmarshal(oldValueBz, &oldValue)
