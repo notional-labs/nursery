@@ -1098,13 +1098,13 @@ func (suite *AccumTestSuite) TestGetPositionSize() {
 			curAccum = accumPackage.MakeTestAccumulator(suite.store, testNameOne, tc.accumInit.Add(tc.expAccumDelta...), emptyDec)
 
 			// Get position size from valid address (or from nonexistant if address does not exist)
-			positionSize, err := curAccum.GetPositionSize(positionName)
+			_, err := curAccum.GetPositionSize(positionName)
 
 			if tc.changedShares.GT(sdk.ZeroDec()) {
 				accumPackage.CreateRawPosition(curAccum, positionName, tc.numShares.Add(tc.changedShares), sdk.NewDecCoins(), nil)
 			}
 
-			positionSize, err = curAccum.GetPositionSize(positionName)
+			positionSize, err := curAccum.GetPositionSize(positionName)
 
 			if tc.expPass {
 				suite.Require().NoError(err)
