@@ -1,9 +1,7 @@
-package ibc_hooks
+package ibchooks
 
 import (
 	// external libraries
-	"fmt"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
 
@@ -29,30 +27,22 @@ func NewICS4Middleware(channel porttypes.ICS4Wrapper, hooks Hooks) ICS4Middlewar
 	}
 }
 
-func (i ICS4Middleware) SendPacket(ctx sdk.Context, chanCap *capabilitytypes.Capability, sourcePort string, sourceChannel string, timeoutHeight clienttypes.Height, timeoutTimestamp uint64, data []byte) (sequence uint64, err error) {
+func (i ICS4Middleware) SendPacket(ctx sdk.Context, channelCap *capabilitytypes.Capability, _ string, sourceChannel string, timeoutHeight clienttypes.Height, timeoutTimestamp uint64, data []byte) (sequence uint64, err error) {
 	if hook, ok := i.Hooks.(SendPacketOverrideHooks); ok {
-		return hook.SendPacketOverride(i, ctx sdk.Context, chanCap *capabilitytypes.Capability, sourcePort string, sourceChannel string, timeoutHeight clienttypes.Height, timeoutTimestamp uint64, data []byte)
+		return hook.SendPacketOverride(i, ctx, channelCap, sourceChannel, sourceChannel, timeoutHeight, timeoutTimestamp, data)
 	}
 
 	if hook, ok := i.Hooks.(SendPacketBeforeHooks); ok {
-		hook.SendPacketBeforeHook(ctx, channelCap, packet)
+		hook.SendPacketBeforeHook(ctx, channelCap, sourceChannel, sourceChannel, timeoutHeight, timeoutTimestamp, data)
 	}
 
-	tempHeight := packet.GetTimeoutHeight()
-
-	height, ok := tempHeight.(clienttypes.Height)
-	if !ok {
-		return fmt.Errorf("could not cast timeout height to clienttypes.Height")
-	}
-
-	// do the type assertion here
-	_, err := i.channel.SendPacket(ctx, channelCap, packet.GetSourcePort(), packet.GetSourceChannel(), height, packet.GetTimeoutTimestamp(), packet.GetData())
+	seq, err := i.channel.SendPacket(ctx, channelCap, sourceChannel, sourceChannel, timeoutHeight, timeoutTimestamp, data)
 
 	if hook, ok := i.Hooks.(SendPacketAfterHooks); ok {
-		hook.SendPacketAfterHook(ctx, channelCap, packet, err)
+		hook.SendPacketAfterHook(ctx, channelCap, sourceChannel, sourceChannel, timeoutHeight, timeoutTimestamp, data, err)
 	}
 
-	return err
+	return seq, err
 }
 
 func (i ICS4Middleware) WriteAcknowledgement(ctx sdk.Context, chanCap *capabilitytypes.Capability, packet ibcexported.PacketI, ack ibcexported.Acknowledgement) error {

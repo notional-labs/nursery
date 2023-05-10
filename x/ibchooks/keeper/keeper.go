@@ -7,9 +7,9 @@ import (
 
 	"github.com/cometbft/cometbft/libs/log"
 
-	storetypes "github.com/cosmos/cosmos-sdk/store/types"
-	"github.com/notional-labs/nursery/x/ibc-hooks/types"
+	"github.com/CosmosContracts/juno/v15/x/ibchooks/types"
 
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 

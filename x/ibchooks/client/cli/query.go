@@ -4,16 +4,16 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/CosmosContracts/juno/v15/x/ibchooks/keeper"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/version"
-	"github.com/notional-labs/nursery/x/ibc-hooks/keeper"
 	"github.com/spf13/cobra"
 
-	"github.com/notional-labs/nursery/x/ibc-hooks/types"
+	"github.com/CosmosContracts/juno/v15/x/ibchooks/types"
 )
 
-func indexRunCmd(cmd *cobra.Command) error {
+func indexRunCmd(cmd *cobra.Command, _ []string) error {
 	usageTemplate := `Usage:{{if .HasAvailableSubCommands}}
   {{.CommandPath}} [command]{{end}}
   

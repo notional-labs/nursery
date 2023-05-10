@@ -1,4 +1,4 @@
-package ibc_hooks
+package ibchooks
 
 import (
 	// external libraries
@@ -235,15 +235,16 @@ func (im IBCMiddleware) OnTimeoutPacket(
 }
 
 // SendPacket implements the ICS4 Wrapper interface
-func (im IBCMiddleware) SendPacket(ctx sdk.Context,
+func (im IBCMiddleware) SendPacket(
+	ctx sdk.Context,
 	chanCap *capabilitytypes.Capability,
 	sourcePort string,
 	sourceChannel string,
 	timeoutHeight clienttypes.Height,
 	timeoutTimestamp uint64,
 	data []byte,
-) error {
-	return im.ICS4Middleware.SendPacket(chanCap, sourcePort, sourceChannel, timeoutHeight, timeoutTimestamp, data)
+) (uint64, error) {
+	return im.ICS4Middleware.SendPacket(ctx, chanCap, sourcePort, sourceChannel, timeoutHeight, timeoutTimestamp, data)
 }
 
 // WriteAcknowledgement implements the ICS4 Wrapper interface
