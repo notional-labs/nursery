@@ -61,7 +61,11 @@ func (suite *TestSuite) SetupTest() {
 		encConfig.Codec,
 		suite.authStoreKey,
 		authsubspace,
-		authtypes.ProtoBaseAccount, maccPerms)
+		authtypes.ProtoBaseAccount,
+		maccPerms,
+		Bech32Prefix,
+		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+	)
 }
 
 const (
