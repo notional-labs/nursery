@@ -10,13 +10,13 @@ Most cosmos chains are mainly the same under the hood.  Nursery aims to standard
 
 The first piece of this is just that every chain made with nursery is a fork of this repository so it is eaiser to merge in changes.  We plan to develop a new abstraction, that separates the chain template from your chain's unique features.  If you use only the template it is likely that nursery can even handle upgrades for you!
 
-At Notional we watched chain teams stumble over fairly rote integration work again and again.  Nursery does that so that you don't need to.  
+At Notional we watched chain teams stumble over fairly rote integration work again and again.  Nursery does that so that you don't need to.
 
 
 ## How?
 
 ```bash
-curl https://raw.githubusercontent.com/notional-labs/nursery/main/simple-nursery.bash | bash
+bash <(curl https://raw.githubusercontent.com/notional-labs/nursery/main/simple-nursery.bash)
 ```
 
 if you don't enjoy that route, then you probably know other ways to use nursery :).
@@ -25,7 +25,7 @@ Note that the simple-nursery.bash script assumes that you've got go 1.20+ and th
 
 
 ```bash
-curl https://raw.githubusercontent.com/notional-labs/nursery/main/nursery.bash | bash
+bash <(curl https://raw.githubusercontent.com/notional-labs/nursery/main/nursery.bash)
 ```
 
 
@@ -85,4 +85,3 @@ Notional's current and former customers:
 * Sei
 
  ...and likely others, as well.  Support over time from the above teams and communities has enabled us to imagine what the ideal new chain might look like.  More recently, it has become time to build that.
-  
