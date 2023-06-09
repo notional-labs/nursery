@@ -6,7 +6,9 @@ Nursery is a cosmos blockchain template that stays up to date with the Cosmos ec
 
 ## Why?
 
-Most cosmos chains are mainly the same under the hood.  Nursery aims to standardize that even further, so that developers can focus on adding new features, instead of rote maintenance.
+Most cosmos chains contain a standard set of boilerplate software.  
+
+Nursery aims to standardize that even further, so that developers can focus on adding new features, instead of rote maintenance.
 
 The first piece of this is just that every chain made with nursery is a fork of this repository so it is eaiser to merge in changes.  We plan to develop a new abstraction, that separates the chain template from your chain's unique features.  If you use only the template it is likely that nursery can even handle upgrades for you!
 
