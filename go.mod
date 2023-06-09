@@ -10,15 +10,15 @@ require (
 	cosmossdk.io/tools/rosetta v0.2.1
 	github.com/CosmWasm/wasmd v0.40.0-tf.rc2
 	github.com/CosmWasm/wasmvm v1.2.1 // indirect
-	github.com/cometbft/cometbft v0.37.0
+	github.com/cometbft/cometbft v0.37.1
 	github.com/cometbft/cometbft-db v0.7.0
 	github.com/cosmos/cosmos-proto v1.0.0-beta.2 // indirect
-	github.com/cosmos/cosmos-sdk v0.47.1
+	github.com/cosmos/cosmos-sdk v0.47.2
 	github.com/cosmos/gogogateway v1.2.0 // indirect
-	github.com/cosmos/gogoproto v1.4.7 // indirect
+	github.com/cosmos/gogoproto v1.4.8 // indirect
 	github.com/cosmos/iavl v0.20.0 // indirect
-	github.com/cosmos/ibc-go/v7 v7.0.1
-	github.com/cosmos/ics23/go v0.9.1-0.20221207100636-b1abd8678aab // indirect
+	github.com/cosmos/ibc-go/v7 v7.1.0
+	github.com/cosmos/ics23/go v0.10.0 // indirect
 	github.com/cosmos/interchain-accounts v0.5.1
 	github.com/docker/distribution v2.8.2+incompatible // indirect
 	github.com/dvsekhvalnov/jose2go v1.5.0 // indirect
@@ -109,7 +109,7 @@ require (
 	github.com/gtank/merlin v0.1.1 // indirect
 	github.com/gtank/ristretto255 v0.1.2 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
-	github.com/hashicorp/go-getter v1.7.0 // indirect
+	github.com/hashicorp/go-getter v1.7.1 // indirect
 	github.com/hashicorp/go-immutable-radix v1.3.1 // indirect
 	github.com/hashicorp/go-safetemp v1.0.0 // indirect
 	github.com/hashicorp/go-version v1.6.0 // indirect
