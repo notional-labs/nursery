@@ -29,10 +29,9 @@ import (
 	"cosmossdk.io/x/nft"
 	nftkeeper "cosmossdk.io/x/nft/keeper"
 	nftmodule "cosmossdk.io/x/nft/module"
-	"cosmossdk.io/x/upgrade"
 	"cosmossdk.io/x/tx/signing"
 	"cosmossdk.io/x/upgrade"
-	
+
 	upgradekeeper "cosmossdk.io/x/upgrade/keeper"
 	upgradetypes "cosmossdk.io/x/upgrade/types"
 
@@ -107,6 +106,7 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
 	abci "github.com/cometbft/cometbft/abci/types"
+	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 
 	"github.com/cosmos/ibc-go/modules/capability"
 	capabilitykeeper "github.com/cosmos/ibc-go/modules/capability/keeper"
@@ -132,7 +132,6 @@ import (
 	porttypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
 	ibcexported "github.com/cosmos/ibc-go/v7/modules/core/exported"
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
-	solomachine "github.com/cosmos/ibc-go/v7/modules/light-clients/06-solomachine"
 	ibctm "github.com/cosmos/ibc-go/v7/modules/light-clients/07-tendermint"
 	ibcmock "github.com/cosmos/ibc-go/v7/testing/mock"
 
@@ -144,8 +143,6 @@ import (
 	//	intertx "github.com/cosmos/interchain-accounts/x/inter-tx"
 	//	intertxkeeper "github.com/cosmos/interchain-accounts/x/inter-tx/keeper"
 	//	intertxtypes "github.com/cosmos/interchain-accounts/x/inter-tx/types"
-
-
 
 	"github.com/CosmWasm/wasmd/x/wasm"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
@@ -273,12 +270,12 @@ type App struct {
 	NFTKeeper             nftkeeper.Keeper
 	ConsensusParamsKeeper consensusparamkeeper.Keeper
 
-	IBCKeeper *ibckeeper.Keeper // IBC Keeper must be a pointer in the app, so we can SetRouter on it correctly
-	IBCFeeKeeper ibcfeekeeper.Keeper
+	IBCKeeper           *ibckeeper.Keeper // IBC Keeper must be a pointer in the app, so we can SetRouter on it correctly
+	IBCFeeKeeper        ibcfeekeeper.Keeper
 	ICAControllerKeeper icacontrollerkeeper.Keeper
-	ICAHostKeeper icahostkeeper.Keeper
-	TransferKeeper ibctransferkeeper.Keeper
-	WasmKeeper     wasm.Keeper
+	ICAHostKeeper       icahostkeeper.Keeper
+	TransferKeeper      ibctransferkeeper.Keeper
+	WasmKeeper          wasm.Keeper
 
 	// make scoped keepers public for test purposes
 	ScopedIBCKeeper           capabilitykeeper.ScopedKeeper
@@ -288,7 +285,7 @@ type App struct {
 	ScopedICAHostKeeper       capabilitykeeper.ScopedKeeper
 	ScopedIBCMockKeeper       capabilitykeeper.ScopedKeeper
 	ScopedICAMockKeeper       capabilitykeeper.ScopedKeeper
-	ScopedWasmKeeper     capabilitykeeper.ScopedKeeper
+	ScopedWasmKeeper          capabilitykeeper.ScopedKeeper
 
 	// make IBC modules public for test purposes
 	// these modules are never directly routed to by the IBC Router
@@ -439,7 +436,7 @@ func NewSimApp(
 
 	scopedIBCKeeper := app.CapabilityKeeper.ScopeToModule(ibcexported.ModuleName)
 	scopedTransferKeeper := app.CapabilityKeeper.ScopeToModule(ibctransfertypes.ModuleName)
-scopedICAControllerKeeper := app.CapabilityKeeper.ScopeToModule(icacontrollertypes.SubModuleName)
+	scopedICAControllerKeeper := app.CapabilityKeeper.ScopeToModule(icacontrollertypes.SubModuleName)
 	scopedICAHostKeeper := app.CapabilityKeeper.ScopeToModule(icahosttypes.SubModuleName)
 
 	// NOTE: the IBC mock keeper and application module is used only for testing core IBC. Do
@@ -451,7 +448,7 @@ scopedICAControllerKeeper := app.CapabilityKeeper.ScopeToModule(icacontrollertyp
 	// seal capability keeper after scoping modules
 	// Applications that wish to enforce statically created ScopedKeepers should call `Seal` after creating
 	// their scoped modules in `NewApp` with `ScopeToModule`
-	
+
 	scopedWasmKeeper := app.CapabilityKeeper.ScopeToModule(wasm.ModuleName)
 	app.CapabilityKeeper.Seal()
 
@@ -696,7 +693,7 @@ scopedICAControllerKeeper := app.CapabilityKeeper.ScopeToModule(icacontrollertyp
 
 	// Add transfer stack to IBC Router
 	ibcRouter.AddRoute(ibctransfertypes.ModuleName, transferStack)
-	
+
 	// Create fee enabled wasm ibc Stack
 	var wasmStack porttypes.IBCModule
 	wasmStack = wasm.NewIBCHandler(app.WasmKeeper, app.IBCKeeper.ChannelKeeper, app.IBCFeeKeeper)
@@ -755,7 +752,6 @@ scopedICAControllerKeeper := app.CapabilityKeeper.ScopeToModule(icacontrollertyp
 	// If evidence needs to be handled for the app, set routes in router here and seal
 	app.EvidenceKeeper = *evidenceKeeper
 
-
 	// Mock Module Stack
 
 	// Mock Module setup for testing IBC and also acts as the interchain accounts authentication module
@@ -778,7 +774,7 @@ scopedICAControllerKeeper := app.CapabilityKeeper.ScopeToModule(icacontrollertyp
 		AddRoute(icacontrollertypes.SubModuleName, icaControllerStack).
 		AddRoute(icahosttypes.SubModuleName, icaHostStack)
 
-// Seal the IBC Router
+		// Seal the IBC Router
 	app.IBCKeeper.SetRouter(ibcRouter)
 
 	/****  Module Options ****/
@@ -866,7 +862,6 @@ scopedICAControllerKeeper := app.CapabilityKeeper.ScopeToModule(icacontrollertyp
 		icatypes.ModuleName,
 		ibcfeetypes.ModuleName,
 		ibcmock.ModuleName,
-		tokenfactorytypes.ModuleName,
 		wasm.ModuleName,
 	)
 
@@ -877,15 +872,11 @@ scopedICAControllerKeeper := app.CapabilityKeeper.ScopeToModule(icacontrollertyp
 		genutiltypes.ModuleName, evidencetypes.ModuleName, authz.ModuleName,
 		feegrant.ModuleName, nft.ModuleName, group.ModuleName,
 		paramstypes.ModuleName, upgradetypes.ModuleName, vestingtypes.ModuleName, consensusparamtypes.ModuleName,
-		// additional non simd modules
-		//		routertypes.ModuleName,
-		//		icqtypes.ModuleName,
 		ibctransfertypes.ModuleName,
 		ibcexported.ModuleName,
 		icatypes.ModuleName,
 		ibcfeetypes.ModuleName,
 		ibcmock.ModuleName,
-		//		tokenfactorytypes.ModuleName,
 		wasm.ModuleName,
 	)
 
@@ -923,7 +914,7 @@ scopedICAControllerKeeper := app.CapabilityKeeper.ScopeToModule(icacontrollertyp
 
 	app.ModuleManager.RegisterInvariants(app.CrisisKeeper)
 	app.configurator = module.NewConfigurator(app.appCodec, app.MsgServiceRouter(), app.GRPCQueryRouter())
-	err := app.ModuleManager.RegisterServices(app.configurator)
+	err = app.ModuleManager.RegisterServices(app.configurator)
 	if err != nil {
 		panic(err)
 	}
@@ -1038,7 +1029,6 @@ scopedICAControllerKeeper := app.CapabilityKeeper.ScopeToModule(icacontrollertyp
 	app.ScopedICAMockKeeper = scopedICAMockKeeper
 	app.ScopedFeeMockKeeper = scopedFeeMockKeeper
 	app.ScopedWasmKeeper = scopedWasmKeeper
-
 
 	return app
 }
