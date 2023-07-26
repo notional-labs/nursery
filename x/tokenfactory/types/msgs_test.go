@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"cosmossdk.io/math"
+
 	"github.com/stretchr/testify/require"
 
 	"github.com/cometbft/cometbft/crypto/ed25519"
@@ -178,7 +179,7 @@ func TestMsgMint(t *testing.T) {
 		{
 			name: "zero amount",
 			msg: createMsg(func(msg types.MsgMint) types.MsgMint {
-				msg.Amount = sdk.NewCoin("bitcoin", sdk.ZeroInt())
+				msg.Amount = sdk.NewCoin("bitcoin", math.ZeroInt())
 				return msg
 			}),
 			expectPass: false,
@@ -247,7 +248,7 @@ func TestMsgBurn(t *testing.T) {
 			name: "zero amount",
 			msg: func() *types.MsgBurn {
 				msg := baseMsg
-				msg.Amount.Amount = sdk.ZeroInt()
+				msg.Amount.Amount = math.ZeroInt()
 				return msg
 			},
 			expectPass: false,

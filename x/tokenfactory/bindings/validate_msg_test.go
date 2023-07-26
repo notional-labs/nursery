@@ -51,7 +51,7 @@ func TestCreateDenom(t *testing.T) {
 	for name, spec := range specs {
 		t.Run(name, func(t *testing.T) {
 			// when
-			_, gotErr := wasmbinding.PerformCreateDenom(&junoapp.AppKeepers.TokenFactoryKeeper, &junoapp.BankKeeper, ctx, actor, spec.createDenom)
+			_, gotErr := wasmbinding.PerformCreateDenom(&junoapp.TokenFactoryKeeper, &junoapp.BankKeeper, ctx, actor, spec.createDenom)
 			// then
 			if spec.expErr {
 				t.Logf("validate_msg_test got error: %v", gotErr)
@@ -179,13 +179,13 @@ func TestMint(t *testing.T) {
 	validDenom := bindings.CreateDenom{
 		Subdenom: "MOON",
 	}
-	_, err := wasmbinding.PerformCreateDenom(&junoapp.AppKeepers.TokenFactoryKeeper, &junoapp.BankKeeper, ctx, creator, &validDenom)
+	_, err := wasmbinding.PerformCreateDenom(&junoapp.TokenFactoryKeeper, &junoapp.BankKeeper, ctx, creator, &validDenom)
 	require.NoError(t, err)
 
 	emptyDenom := bindings.CreateDenom{
 		Subdenom: "",
 	}
-	_, err = wasmbinding.PerformCreateDenom(&junoapp.AppKeepers.TokenFactoryKeeper, &junoapp.BankKeeper, ctx, creator, &emptyDenom)
+	_, err = wasmbinding.PerformCreateDenom(&junoapp.TokenFactoryKeeper, &junoapp.BankKeeper, ctx, creator, &emptyDenom)
 	require.NoError(t, err)
 
 	validDenomStr := fmt.Sprintf("factory/%s/%s", creator.String(), validDenom.Subdenom)
@@ -275,7 +275,7 @@ func TestMint(t *testing.T) {
 	for name, spec := range specs {
 		t.Run(name, func(t *testing.T) {
 			// when
-			gotErr := wasmbinding.PerformMint(&junoapp.AppKeepers.TokenFactoryKeeper, &junoapp.AppKeepers.BankKeeper, ctx, creator, spec.mint)
+			gotErr := wasmbinding.PerformMint(&junoapp.TokenFactoryKeeper, &junoapp.BankKeeper, ctx, creator, spec.mint)
 			// then
 			if spec.expErr {
 				require.Error(t, gotErr)
@@ -298,19 +298,19 @@ func TestBurn(t *testing.T) {
 	validDenom := bindings.CreateDenom{
 		Subdenom: "MOON",
 	}
-	_, err := wasmbinding.PerformCreateDenom(&junoapp.AppKeepers.TokenFactoryKeeper, &junoapp.BankKeeper, ctx, creator, &validDenom)
+	_, err := wasmbinding.PerformCreateDenom(&junoapp.TokenFactoryKeeper, &junoapp.BankKeeper, ctx, creator, &validDenom)
 	require.NoError(t, err)
 
 	emptyDenom := bindings.CreateDenom{
 		Subdenom: "",
 	}
-	_, err = wasmbinding.PerformCreateDenom(&junoapp.AppKeepers.TokenFactoryKeeper, &junoapp.BankKeeper, ctx, creator, &emptyDenom)
+	_, err = wasmbinding.PerformCreateDenom(&junoapp.TokenFactoryKeeper, &junoapp.BankKeeper, ctx, creator, &emptyDenom)
 	require.NoError(t, err)
 
 	lucky := RandomAccountAddress()
 
 	// lucky was broke
-	balances := junoapp.AppKeepers.BankKeeper.GetAllBalances(ctx, lucky)
+	balances := junoapp.BankKeeper.GetAllBalances(ctx, lucky)
 	require.Empty(t, balances)
 
 	validDenomStr := fmt.Sprintf("factory/%s/%s", creator.String(), validDenom.Subdenom)
@@ -392,7 +392,7 @@ func TestBurn(t *testing.T) {
 				Amount:        mintAmount,
 				MintToAddress: creator.String(),
 			}
-			err := wasmbinding.PerformMint(&junoapp.AppKeepers.TokenFactoryKeeper, &junoapp.AppKeepers.BankKeeper, ctx, creator, mintBinding)
+			err := wasmbinding.PerformMint(&junoapp.TokenFactoryKeeper, &junoapp.BankKeeper, ctx, creator, mintBinding)
 			require.NoError(t, err)
 
 			emptyDenomMintBinding := &bindings.MintTokens{
@@ -400,7 +400,7 @@ func TestBurn(t *testing.T) {
 				Amount:        mintAmount,
 				MintToAddress: creator.String(),
 			}
-			err = wasmbinding.PerformMint(&junoapp.AppKeepers.TokenFactoryKeeper, &junoapp.BankKeeper, ctx, creator, emptyDenomMintBinding)
+			err = wasmbinding.PerformMint(&junoapp.TokenFactoryKeeper, &junoapp.BankKeeper, ctx, creator, emptyDenomMintBinding)
 			require.NoError(t, err)
 
 			// when

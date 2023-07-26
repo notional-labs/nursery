@@ -40,3 +40,5 @@ const (
 	DefaultWeightUpdateInstantiateConfigProposal     int = 5
 	DefaultWeightStoreAndInstantiateContractProposal int = 5
 )
+
+var BondDenom = "danger"
