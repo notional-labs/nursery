@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	dbm "github.com/cosmos/cosmos-db"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -22,7 +23,7 @@ func (k Keeper) GetDenomsFromCreator(ctx sdk.Context, creator string) []string {
 	return denoms
 }
 
-func (k Keeper) GetAllDenomsIterator(ctx sdk.Context) sdk.Iterator {
+func (k Keeper) GetAllDenomsIterator(ctx sdk.Context) dbm.Iterator {
 	return k.GetCreatorsPrefixStore(ctx).Iterator(nil, nil)
 }
 
